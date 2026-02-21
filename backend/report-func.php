@@ -39,6 +39,7 @@ class ReportFunctions {
         }
         
         $stmt->close();
+        $db->close();
         return $months;
     }
     
@@ -113,6 +114,7 @@ class ReportFunctions {
         }
         
         $stmt->close();
+        $db->close();
         return $expenses;
     }
     
@@ -242,6 +244,7 @@ class ReportFunctions {
             ];
         }
         $stmt->close();
+        $db->close();
         
         return $insights;
     }
