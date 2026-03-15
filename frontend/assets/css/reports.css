@@ -1,102 +1,6 @@
-        :root {
-            --primary-color: #4361ee;
-            --secondary-color: #7209b7;
-            --success-color: #06d6a0;
-            --warning-color: #ffb703;
-            --danger-color: #ef476f;
-            --dark-color: #2b2d42;
-            --light-color: #f8f9fa;
-        }
-
-        body {
-            background-color: #f4f7fc;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-        }
 
         .main-wrapper {
             min-height: 100vh;
-        }
-
-        /* Sidebar Styles */
-        .sidebar {
-            background: linear-gradient(180deg, var(--dark-color) 0%, #1a1e2c 100%);
-            min-height: 100vh;
-            color: white;
-            position: sticky;
-            top: 0;
-        }
-
-        .sidebar .nav-link {
-            color: rgba(255, 255, 255, 0.8);
-            padding: 0.8rem 1rem;
-            margin: 0.2rem 0;
-            border-radius: 8px;
-            transition: all 0.3s;
-        }
-
-        .sidebar .nav-link:hover {
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            transform: translateX(5px);
-        }
-
-        .sidebar .nav-link.active {
-            background: linear-gradient(90deg, rgba(67, 97, 238, 0.3), transparent);
-            color: white;
-            border-left: 4px solid var(--primary-color);
-        }
-
-        .sidebar .nav-link i {
-            width: 24px;
-            margin-right: 10px;
-        }
-
-        .sidebar .nav-link.logout {
-            color: var(--danger-color);
-        }
-
-        .sidebar .nav-link.logout:hover {
-            background: rgba(239, 71, 111, 0.1);
-        }
-
-        .user-info {
-            padding: 1.5rem 1rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            margin-bottom: 1rem;
-        }
-
-        .user-info h5 {
-            margin: 0;
-            font-size: 1.1rem;
-        }
-
-        .user-info small {
-            color: rgba(255, 255, 255, 0.6);
-        }
-
-        /* Main Content Styles */
-        .main-content {
-            padding: 2rem;
-        }
-
-        .page-title {
-            margin-bottom: 2rem;
-        }
-
-        .page-title h1 {
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--dark-color);
-        }
-
-        .page-title h1 i {
-            color: var(--primary-color);
-            margin-right: 10px;
-        }
-
-        .page-title p {
-            color: #6c757d;
-            margin: 0;
         }
 
         /* Card Styles */
@@ -414,20 +318,6 @@
         }
 
         /* Responsive */
-        @media (max-width: 992px) {
-            .sidebar {
-                min-height: auto;
-                position: relative;
-            }
-
-            .main-content {
-                padding: 1.5rem;
-            }
-
-            .chart-wrapper {
-                height: 300px;
-            }
-        }
 
         @media (max-width: 768px) {
             .month-selector .row {
@@ -690,51 +580,6 @@
 /* Ensure Bootstrap icons align properly */
 .bi, .fas, .far, .fal {
     vertical-align: middle;
-}
-
-/* Sidebar active link indicator */
-.sidebar .nav-link.active {
-    position: relative;
-}
-
-.sidebar .nav-link.active::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 0;
-    height: 100%;
-    width: 4px;
-    background: var(--primary-color);
-    border-radius: 0 4px 4px 0;
-}
-
-/* User info in sidebar */
-.user-info {
-    background: rgba(0,0,0,0.2);
-    border-radius: 0;
-}
-
-/* Bootstrap overrides for dark sidebar */
-.sidebar .nav-link {
-    color: rgba(255,255,255,0.8) !important;
-}
-
-.sidebar .nav-link:hover {
-    color: white !important;
-    background: rgba(255,255,255,0.1) !important;
-}
-
-.sidebar .nav-link.active {
-    color: white !important;
-    background: linear-gradient(90deg, rgba(67,97,238,0.3), transparent) !important;
-}
-
-.sidebar .nav-link.logout {
-    color: #ef476f !important;
-}
-
-.sidebar .nav-link.logout:hover {
-    background: rgba(239,71,111,0.1) !important;
 }
 
 /* Form validation styles */

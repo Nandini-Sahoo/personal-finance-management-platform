@@ -43,23 +43,11 @@ $insights = $reportFunctions->generateInsights($comparison, $currentMonth, $prev
 // Get month names for display
 $currentMonthName = $reportFunctions->getMonthName($currentMonth);
 $previousMonthName = $reportFunctions->getMonthName($previousMonth);
+
+include_once '../add-asset.html';
+
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Monthly Pattern Analysis</title>
-    
-    <!-- Bootstrap 5 CSS -->
-    <link href="../../assets/css/bootstrap.min.css" rel="stylesheet">
-    
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Chart.js -->
-    <script src="../../assets/chart/chart.min.js"></script>
-    
+
     <!-- Custom CSS -->
     <link rel="stylesheet" href="../../assets/css/reports.css">
 </head>
@@ -67,6 +55,7 @@ $previousMonthName = $reportFunctions->getMonthName($previousMonth);
     <div class="container-fluid p-0">
         <div class="row g-0">
            <?php include_once '../sidebar.php'?>
+           
             <!-- Main Content -->
             <div class="col-lg-10 col-md-9 main-content">
                 <!-- Page Title -->
@@ -332,9 +321,6 @@ $previousMonthName = $reportFunctions->getMonthName($previousMonth);
         </div>
     </div>
     
-    <!-- Bootstrap JS Bundle -->
-    <script src="../../assets/js/bootstrap.bundle.min.js"></script>
-    
     <!-- Chart.js Script -->
     <script>
         $(document).ready(function() {
@@ -443,5 +429,3 @@ $previousMonthName = $reportFunctions->getMonthName($previousMonth);
             }
         });
     </script>
-</body>
-</html>

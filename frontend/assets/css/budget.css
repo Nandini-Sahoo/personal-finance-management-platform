@@ -1,0 +1,429 @@
+        
+        /* Main Content */
+        .main-content {
+            padding: 2rem;
+        }
+        
+        .page-title {
+            margin-bottom: 2rem;
+        }
+        
+        .page-title h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--dark-color);
+        }
+        
+        .page-title h1 i {
+            color: var(--primary-color);
+            margin-right: 10px;
+        }
+        
+        .page-title p {
+            color: #6c757d;
+            margin: 0;
+        }
+        
+        /* Summary Cards */
+        .summary-card {
+            background: white;
+            border: none;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            margin-bottom: 1.5rem;
+            transition: transform 0.3s;
+        }
+        
+        .summary-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .summary-card .label {
+            color: #6c757d;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .summary-card .value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--dark-color);
+        }
+        
+        .summary-card .sub {
+            font-size: 0.9rem;
+            color: #6c757d;
+            margin-top: 0.5rem;
+        }
+        
+        .summary-card.primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+        }
+        
+        .summary-card.primary .value {
+            color: white;
+        }
+        
+        .summary-card.primary .label {
+            color: rgba(255,255,255,0.8);
+        }
+        
+        /* Month Selector */
+        .month-selector {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+        }
+        
+        .btn-view {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            padding: 0.6rem 2rem;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .btn-view:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(67,97,238,0.3);
+            color: white;
+        }
+        
+        /* Budget Cards */
+        .budget-card {
+            background: white;
+            border: none;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            margin-bottom: 1.5rem;
+            transition: all 0.3s;
+            border-left: 4px solid transparent;
+        }
+        
+        .budget-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+        
+        .budget-card.status-good {
+            border-left-color: var(--success-color);
+        }
+        
+        .budget-card.status-warning {
+            border-left-color: var(--warning-color);
+        }
+        
+        .budget-card.status-over {
+            border-left-color: var(--danger-color);
+        }
+        
+        .budget-card.status-no-budget {
+            border-left-color: #6c757d;
+        }
+        
+        .budget-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .budget-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+        
+        .budget-icon {
+            font-size: 1.2rem;
+        }
+        
+        .budget-amount {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .budget-amount-input {
+            width: 120px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 0.5rem;
+            font-weight: 600;
+        }
+        
+        .budget-amount-input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(67,97,238,0.1);
+            outline: none;
+        }
+        
+        .spent-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+        
+        .spent-amount {
+            font-weight: 600;
+        }
+        
+        .remaining {
+            font-size: 0.9rem;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            background: #f8f9fa;
+        }
+        
+        .progress {
+            height: 8px;
+            border-radius: 4px;
+            margin-bottom: 0.5rem;
+        }
+        
+        .status-message {
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            display: inline-block;
+        }
+        
+        .status-message.good {
+            background: rgba(6,214,160,0.1);
+            color: var(--success-color);
+        }
+        
+        .status-message.warning {
+            background: rgba(255,183,3,0.1);
+            color: var(--warning-color);
+        }
+        
+        .status-message.over {
+            background: rgba(239,71,111,0.1);
+            color: var(--danger-color);
+        }
+        
+        .status-message.no-budget {
+            background: rgba(108,117,125,0.1);
+            color: #6c757d;
+        }
+        
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        
+        .btn-save {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            padding: 0.8rem 2.5rem;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .btn-save:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(67,97,238,0.3);
+            color: white;
+        }
+        
+        .btn-view-all {
+            background: white;
+            border: 2px solid #e9ecef;
+            color: var(--dark-color);
+            padding: 0.8rem 2.5rem;
+            border-radius: 10px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .btn-view-all:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+/* assets/css/budget.css - Minimal Bootstrap Overrides */
+
+/* Custom animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.main-content {
+    animation: fadeIn 0.5s ease;
+}
+
+/* Budget card hover effect */
+.budget-card {
+    animation: fadeIn 0.5s ease;
+}
+
+/* Progress bar animations */
+.progress-bar {
+    transition: width 0.5s ease;
+}
+
+/* Number input styling */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    opacity: 0.5;
+}
+
+input[type=number]:hover::-webkit-inner-spin-button,
+input[type=number]:hover::-webkit-outer-spin-button {
+    opacity: 1;
+}
+
+/* Status message animations */
+.status-message {
+    transition: all 0.3s ease;
+}
+
+/* Alert animations */
+.alert {
+    animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Print styles */
+@media print {
+    .sidebar,
+    .month-selector,
+    .btn-save,
+    .btn-view-all,
+    .btn-view,
+    .alert {
+        display: none !important;
+    }
+    
+    .main-content {
+        margin: 0 !important;
+        padding: 20px !important;
+    }
+    
+    .budget-card,
+    .month-group {
+        break-inside: avoid;
+        border: 1px solid #ddd !important;
+        box-shadow: none !important;
+    }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+
+/* Focus styles */
+input:focus,
+select:focus,
+button:focus {
+    outline: none;
+}
+
+/* Loading spinner */
+.spinner-border-sm {
+    width: 1rem;
+    height: 1rem;
+    border-width: 0.15em;
+}
+
+/* Budget amount input hover effect */
+.budget-amount-input:hover {
+    border-color: var(--primary-color);
+}
+
+/* Responsive adjustments */
+@media (max-width: 576px) {
+    .budget-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+    
+    .budget-amount {
+        flex-wrap: wrap;
+    }
+    
+    .budget-amount-input {
+        width: 100%;
+    }
+}
+
+/* Tooltip styling */
+[data-tooltip] {
+    position: relative;
+    cursor: pointer;
+}
+
+[data-tooltip]:before {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 0.5rem 1rem;
+    background: rgba(0,0,0,0.8);
+    color: white;
+    font-size: 0.85rem;
+    border-radius: 4px;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s;
+}
+
+[data-tooltip]:hover:before {
+    opacity: 1;
+    visibility: visible;
+    bottom: 120%;
+}
