@@ -1,9 +1,9 @@
 <?php
 
-require_once "dbcon.php";
+require_once "../../../backend/config/dbcon.php";
 session_start();
 $msg="";
-
+$conn=getConnection();
 if($_SERVER["REQUEST_METHOD"]=="POST"){
 
 $email=$_POST["email"];
