@@ -1,12 +1,12 @@
 <?php 
 include_once "navbar.php";
 include_once "check.php";
-require_once "dbcon.php";
+require_once "../../../backend/config/dbcon.php";
 
 $id = $_SESSION['user_id'];
-
+$conn=getConnection();
 /* Total Income */
-$qry_income = "SELECT SUM(amount) as total_income FROM transactions WHERE user_id=? AND type='income'";
+$qry_income = "SELECT SUM(amount) as total_income FROM income WHERE user_id=?";
 $stmt1 = $conn->prepare($qry_income);
 $stmt1->bind_param("i",$id);
 $stmt1->execute();
@@ -14,7 +14,7 @@ $result1 = $stmt1->get_result();
 $income = $result1->fetch_assoc()['total_income'] ?? 0;
 
 /* Total Expense */
-$qry_expense = "SELECT SUM(amount) as total_expense FROM transactions WHERE user_id=? AND type='expense'";
+$qry_expense = "SELECT SUM(amount) as total_expense FROM expenses WHERE user_id=?";
 $stmt2 = $conn->prepare($qry_expense);
 $stmt2->bind_param("i",$id);
 $stmt2->execute();
