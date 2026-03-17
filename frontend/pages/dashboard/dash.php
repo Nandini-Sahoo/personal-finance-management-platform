@@ -1,12 +1,13 @@
 <?php 
+//session_start();
 include_once "navbar.php";
-include_once "check.php";
-require_once "dbcon.php";
-
+//include_once "check.php";
+require_once "../../../backend/config/dbcon.php";
+$conn = getConnection();
 $id = $_SESSION['user_id'];
 
 /* Total Income */
-$qry_income = "SELECT SUM(amount) as total_income FROM transactions WHERE user_id=? AND type='income'";
+$qry_income = "SELECT SUM(amount) as total_income FROM income WHERE user_id=?";
 $stmt1 = $conn->prepare($qry_income);
 $stmt1->bind_param("i",$id);
 $stmt1->execute();
@@ -14,7 +15,7 @@ $result1 = $stmt1->get_result();
 $income = $result1->fetch_assoc()['total_income'] ?? 0;
 
 /* Total Expense */
-$qry_expense = "SELECT SUM(amount) as total_expense FROM transactions WHERE user_id=? AND type='expense'";
+$qry_expense = "SELECT SUM(amount) as total_expense FROM expenses WHERE user_id=?";
 $stmt2 = $conn->prepare($qry_expense);
 $stmt2->bind_param("i",$id);
 $stmt2->execute();
@@ -72,9 +73,7 @@ $balance = $income - $expense;
 <a href="add_expense.php" class="btn btn-danger m-2">Add Expense</a>
 
 <a href="transactions.php" class="btn btn-info m-2">View Transactions</a>
-
 </div>
-
 </div>
-
+<br>
 <?php include_once "footer.php"; ?>

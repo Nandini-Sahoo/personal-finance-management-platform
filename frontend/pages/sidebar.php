@@ -101,16 +101,16 @@
                    </div>
                    
                    <nav class="nav flex-column px-3">
-                       <a class="nav-link" href="../dashboard.php">
+                       <a class="nav-link" href="dashboard/dashboard.php">
                            <i class="fas fa-home"></i> Dashboard
                        </a>
-                       <a class="nav-link" href="../transactions/add-expense.php">
+                       <a class="nav-link" href="dashboard/add_expense.php">
                            <i class="fas fa-plus-circle"></i> Add Expense
                        </a>
-                       <a class="nav-link" href="../transactions/add-income.php">
+                       <a class="nav-link" href="dashboard/add_income.php">
                            <i class="fas fa-plus-circle"></i> Add Income
                        </a>
-                       <a class="nav-link" href="../transactions/view-transactions.php">
+                       <a class="nav-link" href="dashboard/transactions.php">
                            <i class="fas fa-list"></i> Transactions
                        </a>
                        <a class="nav-link active" href="../report/report.php">

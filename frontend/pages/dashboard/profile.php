@@ -1,7 +1,8 @@
 <?php 
+session_start();
 include_once "navbar.php";
-include_once "check.php";
-require_once "dbcon.php";
+//include_once "check.php";
+require_once "../../../config/dbcon.php";
 
 $id = $_SESSION['user_id'];
 
