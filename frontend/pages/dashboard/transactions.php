@@ -1,5 +1,12 @@
+<<<<<<< HEAD
 <?php
 $conn = new mysqli("localhost","root","","personal_finance_db");
+=======
+<?php 
+include_once "navbar.php";
+include_once "check.php";
+require_once "../../../backend/config/dbcon.php";
+>>>>>>> d0bf7e272a5b29e474dd605f1f23ccc0d744844c
 
 if($conn->connect_error){
 die("Database connection failed");

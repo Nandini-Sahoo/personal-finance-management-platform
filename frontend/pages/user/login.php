@@ -1,9 +1,9 @@
 <?php
 
-require_once "dbcon.php";
+require_once "../../../backend/config/dbcon.php";
 session_start();
 $msg="";
-
+$conn=getConnection();
 if($_SERVER["REQUEST_METHOD"]=="POST"){
 
 $email=$_POST["email"];
@@ -24,7 +24,7 @@ if(password_verify($password,$data["password_hash"])){
 $_SESSION["user_id"]=$data["user_id"];
 $_SESSION["user_name"]=$data["name"];
 
-header("Location: dashboard.php");
+header("Location: ../dashboard/da.php");
 exit();
 
 }else{

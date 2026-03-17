@@ -1,11 +1,17 @@
 <?php 
 //session_start();
 include_once "navbar.php";
+<<<<<<< HEAD:frontend/pages/dashboard/dash.php
 //include_once "check.php";
 require_once "../../../backend/config/dbcon.php";
 $conn = getConnection();
-$id = $_SESSION['user_id'];
+=======
+include_once "check.php";
+require_once "../../../backend/config/dbcon.php";
 
+>>>>>>> d0bf7e272a5b29e474dd605f1f23ccc0d744844c:frontend/pages/dashboard/da.php
+$id = $_SESSION['user_id'];
+$conn=getConnection();
 /* Total Income */
 $qry_income = "SELECT SUM(amount) as total_income FROM income WHERE user_id=?";
 $stmt1 = $conn->prepare($qry_income);
