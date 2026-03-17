@@ -1,18 +1,14 @@
-<<<<<<< HEAD
 <?php
-$conn = new mysqli("localhost","root","","personal_finance_db");
-=======
-<?php 
 include_once "navbar.php";
 include_once "check.php";
 require_once "../../../backend/config/dbcon.php";
->>>>>>> d0bf7e272a5b29e474dd605f1f23ccc0d744844c
 
+$conn=getConnection();
 if($conn->connect_error){
 die("Database connection failed");
 }
 
-$sql = "SELECT * FROM transactions ORDER BY date DESC";
+$sql = "SELECT * FROM users ORDER BY created_at DESC";
 $result = $conn->query($sql);
 ?>
 

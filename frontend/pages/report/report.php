@@ -48,7 +48,7 @@ include_once '../add-asset.html';
 
 ?>
 
-    <!-- Custom CSS -->
+      <!-- Custom CSS -->
     <link rel="stylesheet" href="../../assets/css/reports.css">
 </head>
 <body>
@@ -66,7 +66,7 @@ include_once '../add-asset.html';
                 
                 <!-- Month Selector -->
                 <div class="month-selector">
-                    <form id="monthComparisonForm" method="GET" action="monthly-analysis.php">
+                    <form id="monthComparisonForm" method="GET" action="report.php">
                         <div class="row align-items-end">
                             <div class="col-md-5">
                                 <label class="form-label fw-semibold">Month 1:</label>
@@ -351,6 +351,7 @@ include_once '../add-asset.html';
             if (categories.length > 0) {
                 const ctx = document.getElementById('comparisonChart').getContext('2d');
                 
+                // In report.php, update the chart colors
                 new Chart(ctx, {
                     type: 'bar',
                     data: {
@@ -359,7 +360,7 @@ include_once '../add-asset.html';
                             {
                                 label: '<?php echo $currentMonthName; ?>',
                                 data: currentAmounts,
-                                backgroundColor: 'rgba(67, 97, 238, 0.8)',
+                                backgroundColor: '#4361ee', // Use hex instead of rgba for consistency
                                 borderColor: '#4361ee',
                                 borderWidth: 1,
                                 borderRadius: 6,
@@ -369,7 +370,7 @@ include_once '../add-asset.html';
                             {
                                 label: '<?php echo $previousMonthName; ?>',
                                 data: previousAmounts,
-                                backgroundColor: 'rgba(239, 71, 111, 0.8)',
+                                backgroundColor: '#ef476f', // Use hex instead of rgba
                                 borderColor: '#ef476f',
                                 borderWidth: 1,
                                 borderRadius: 6,
@@ -429,3 +430,5 @@ include_once '../add-asset.html';
             }
         });
     </script>
+</body>
+</html>

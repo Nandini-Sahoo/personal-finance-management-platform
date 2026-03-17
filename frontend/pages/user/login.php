@@ -24,7 +24,7 @@ if(password_verify($password,$data["password_hash"])){
 $_SESSION["user_id"]=$data["user_id"];
 $_SESSION["user_name"]=$data["name"];
 
-header("Location: ../dashboard/da.php");
+header("Location: ../dashboard/dashboard.php");
 exit();
 
 }else{
