@@ -1,18 +1,25 @@
 <?php
 
-$conn = new mysqli("localhost","root","","personal_finance_db");
+require_once "../../../backend/config/dbcon.php";
 
-if($conn->connect_error){
-die("Database connection failed");
-}
+$userId=1;
+$conn=getConnection();
+
 
 $category = $_POST['category'];
 $amount = $_POST['amount'];
 $date = $_POST['date'];
 $description = $_POST['description'];
 
-$sql = "INSERT INTO income(category,amount,date,description)
-VALUES('$category','$amount','$date','$description')";
+$stmt= $conn->prepare("SELECT * FROM categories WHERE category_name=?");
+$stmt->bind_param("s", $category);
+$stmt->execute();
+$result = $stmt->get_result();
+$row = $result->fetch_assoc();
+$catId=$row['category_id'];
+
+$sql = "INSERT INTO income (user_id, category_id, amount, income_date, source)
+VALUES('$userId', '$catId','$amount','$date','$description')";
 
 if($conn->query($sql)){
 echo "✅ Income Added Successfully! You can add another.";

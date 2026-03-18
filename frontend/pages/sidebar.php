@@ -126,7 +126,7 @@ $userName=" "
         <a class="nav-link <?php echo isActive('set-budget.php') || isActive('view-budget.php') || isActive('budget-process.php') ? 'active' : ''; ?>" href="../budget/set-budget.php">
             <i class="fas fa-tasks"></i> Budget
         </a>
-        <a class="nav-link <?php echo isActive('profile.php'); ?>" href="../profile.php">
+        <a class="nav-link <?php echo isActive('profile.php'); ?>" href="../dashboard/profile.php">
             <i class="fas fa-user"></i> Profile
         </a>
         <hr class="text-white-50 my-3">

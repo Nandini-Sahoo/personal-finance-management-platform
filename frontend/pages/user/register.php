@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once "dbcon.php";
+require_once "../../../backend/config/dbcon.php";
 
 $msg="";
 
@@ -15,6 +15,7 @@ if($password!=$confirm_password){
 $msg="Passwords do not match";
 }else{
 
+$conn=getConnection();
 $check="SELECT * FROM users WHERE email=?";
 $stmt=$conn->prepare($check);
 $stmt->bind_param("s",$email);

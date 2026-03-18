@@ -107,7 +107,7 @@ class BudgetFunctions {
         
         $actualSpending = [];
         while ($row = $result->fetch_assoc()) {
-            $actualSpending[$row['category_id']] = $row['amount'];
+            $actualSpending[$row['category_id']] = $row['spent_amount'];
             }
             $stmt->close();
             $db->close();
