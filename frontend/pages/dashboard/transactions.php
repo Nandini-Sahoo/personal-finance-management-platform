@@ -5,8 +5,6 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 // Include required files
-include_once '../sidebar.php';
-include_once '../add-asset.html';
 include_once "check.php";
 require_once "../../../backend/config/dbcon.php";
 
@@ -159,466 +157,91 @@ $months = $stmt_months->get_result()->fetch_all(MYSQLI_ASSOC);
 $categories_query = "SELECT DISTINCT category_name FROM categories WHERE category_type IN ('income', 'expense') ORDER BY category_name";
 $categories_result = $conn->query($categories_query);
 $categories = $categories_result->fetch_all(MYSQLI_ASSOC);
+
+// Include assets
+include_once '../add-asset.html';
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>All Transactions</title>
+<!-- Custom CSS for Transactions -->
+<link rel="stylesheet" href="../../assets/css/transaction.css">
+
+<style>
+    /* Additional fixes to match dashboard layout */
+    .transactions-content {
+        padding: 2rem;
+        background: var(--bg-dark);
+        min-height: 100vh;
+    }
     
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    /* Ensure the container works with Bootstrap grid */
+    .container-fluid.p-0 {
+        overflow: hidden;
+    }
     
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    .row.g-0 {
+        margin: 0;
+    }
     
-    <style>
-        :root {
-            --primary-color: #4361ee;
-            --secondary-color: #7209b7;
-            --success-color: #06d6a0;
-            --warning-color: #ffb703;
-            --danger-color: #ef476f;
-            --dark-color: #2b2d42;
-            --bg-dark: #0a192f;
-            --bg-card: #112240;
-            --border-color: #233554;
-            --accent-color: #64ffda;
-        }
+    /* Fix for sidebar */
+    .sidebar {
+        background: linear-gradient(180deg, var(--dark-color) 0%, #1a1e2c 100%);
+        min-height: 100vh;
+        color: white;
+        position: sticky;
+        top: 0;
+    }
+    
+    /* Override any conflicting styles */
+    .main-content {
+        background: var(--bg-dark);
+    }
+    
+    /* Ensure cards have proper background */
+    .filters-card,
+    .table-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+    }
+    
+    /* Fix for table text color */
+    .table {
+        color: #fff;
+    }
+    
+    .table thead th {
+        background: #1e3a5f;
+        color: var(--accent-color);
+    }
+    
+    /* Fix for action buttons */
+    .btn-edit, .btn-delete {
+        background: transparent;
+    }
+    
+    /* Fix for pagination */
+    .page-link {
+        background: var(--bg-card);
+        color: #fff;
+    }
+    
+    /* Fix for export buttons */
+    .btn-export {
+        background: transparent;
+        color: #fff;
+    }
+</style>
 
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: var(--bg-dark);
-            color: #fff;
-            margin: 0;
-            overflow-x: hidden;
-        }
-
-        /* Main Layout */
-        .main-wrapper {
-            display: flex;
-            min-height: 100vh;
-        }
-
-        .sidebar-col {
-            width: 250px;
-            flex-shrink: 0;
-            background: linear-gradient(180deg, var(--dark-color) 0%, #1a1e2c 100%);
-            position: fixed;
-            height: 100vh;
-            overflow-y: auto;
-        }
-
-        .content-col {
-            flex: 1;
-            margin-left: 250px;
-            padding: 2rem;
-            background: var(--bg-dark);
-        }
-
-        /* Container */
-        .transactions-container {
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        /* Title */
-        .page-title {
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-
-        .page-title h1 {
-            color: var(--accent-color);
-            font-size: 2.5rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 0.5rem;
-        }
-
-        .page-title h1 i {
-            margin-right: 10px;
-            color: var(--primary-color);
-        }
-
-        .page-title p {
-            color: #8892b0;
-            font-size: 1rem;
-        }
-
-        /* Filters Card */
-        .filters-card {
-            background: var(--bg-card);
-            border-radius: 15px;
-            padding: 1.5rem;
-            margin-bottom: 2rem;
-            border: 1px solid var(--border-color);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-        }
-
-        .filter-label {
-            color: var(--accent-color);
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .filter-select, .filter-input {
-            background: #1e3a5f;
-            border: 2px solid var(--border-color);
-            color: #fff;
-            border-radius: 8px;
-            padding: 0.6rem 1rem;
-            width: 100%;
-            font-size: 0.95rem;
-            transition: all 0.3s;
-        }
-
-        .filter-select option {
-            background: var(--bg-card);
-            color: #fff;
-        }
-
-        .filter-select:focus, .filter-input:focus {
-            border-color: var(--accent-color);
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(100, 255, 218, 0.1);
-        }
-
-        .filter-input::placeholder {
-            color: #64748b;
-        }
-
-        .btn-filter {
-            background: var(--accent-color);
-            color: var(--bg-dark);
-            border: none;
-            padding: 0.6rem 2rem;
-            border-radius: 8px;
-            font-weight: 600;
-            transition: all 0.3s;
-            width: 100%;
-            cursor: pointer;
-        }
-
-        .btn-filter:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(100, 255, 218, 0.3);
-        }
-
-        .btn-reset {
-            background: transparent;
-            border: 2px solid var(--border-color);
-            color: #8892b0;
-            padding: 0.6rem 2rem;
-            border-radius: 8px;
-            font-weight: 600;
-            transition: all 0.3s;
-            text-decoration: none;
-            display: inline-block;
-            text-align: center;
-        }
-
-        .btn-reset:hover {
-            border-color: var(--danger-color);
-            color: var(--danger-color);
-        }
-
-        /* Table Card */
-        .table-card {
-            background: var(--bg-card);
-            border-radius: 15px;
-            padding: 1.5rem;
-            border: 1px solid var(--border-color);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            margin-bottom: 2rem;
-        }
-
-        .table-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-            padding-bottom: 1rem;
-            border-bottom: 2px solid var(--border-color);
-        }
-
-        .table-header h5 {
-            color: var(--accent-color);
-            font-weight: 600;
-            margin: 0;
-        }
-
-        .table-header h5 i {
-            margin-right: 10px;
-            color: var(--primary-color);
-        }
-
-        .table-count {
-            background: rgba(100, 255, 218, 0.1);
-            color: var(--accent-color);
-            padding: 0.4rem 1rem;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            font-weight: 600;
-        }
-
-        .table {
-            width: 100%;
-            border-collapse: collapse;
-            color: #fff;
-        }
-
-        .table thead th {
-            background: #1e3a5f;
-            color: var(--accent-color);
-            font-weight: 600;
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            padding: 1rem;
-            border-bottom: 2px solid var(--border-color);
-            text-align: center;
-        }
-
-        .table tbody td {
-            padding: 1rem;
-            border-bottom: 1px solid var(--border-color);
-            text-align: center;
-            vertical-align: middle;
-        }
-
-        .table tbody tr:hover {
-            background: #1e3a5f;
-            transition: background 0.3s;
-        }
-
-        /* Badges */
-        .badge-income {
-            background: rgba(6, 214, 160, 0.1);
-            color: var(--success-color);
-            padding: 0.4rem 1rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            display: inline-block;
-        }
-
-        .badge-expense {
-            background: rgba(239, 71, 111, 0.1);
-            color: var(--danger-color);
-            padding: 0.4rem 1rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            display: inline-block;
-        }
-
-        .category-badge {
-            background: rgba(100, 255, 218, 0.1);
-            color: var(--accent-color);
-            padding: 0.4rem 1rem;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 500;
-            display: inline-block;
-        }
-
-        /* Amount colors */
-        .amount-income {
-            color: var(--success-color);
-            font-weight: 700;
-            font-size: 1.1rem;
-        }
-
-        .amount-expense {
-            color: var(--danger-color);
-            font-weight: 700;
-            font-size: 1.1rem;
-        }
-
-        /* Action Buttons */
-        .btn-edit {
-            background: transparent;
-            border: 2px solid var(--primary-color);
-            color: var(--primary-color);
-            padding: 0.4rem 1rem;
-            border-radius: 6px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            transition: all 0.3s;
-            cursor: pointer;
-            margin-right: 0.5rem;
-        }
-
-        .btn-edit:hover {
-            background: var(--primary-color);
-            color: white;
-        }
-
-        .btn-delete {
-            background: transparent;
-            border: 2px solid var(--danger-color);
-            color: var(--danger-color);
-            padding: 0.4rem 1rem;
-            border-radius: 6px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            transition: all 0.3s;
-            cursor: pointer;
-        }
-
-        .btn-delete:hover {
-            background: var(--danger-color);
-            color: white;
-        }
-
-        /* Pagination */
-        .pagination {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 0.5rem;
-            margin-top: 2rem;
-        }
-
-        .page-link {
-            display: inline-block;
-            padding: 0.5rem 1rem;
-            background: var(--bg-card);
-            border: 2px solid var(--border-color);
-            border-radius: 8px;
-            color: #fff;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s;
-        }
-
-        .page-link:hover {
-            border-color: var(--accent-color);
-            color: var(--accent-color);
-        }
-
-        .page-link.active {
-            background: var(--accent-color);
-            color: var(--bg-dark);
-            border-color: var(--accent-color);
-        }
-
-        .page-link.disabled {
-            opacity: 0.5;
-            pointer-events: none;
-        }
-
-        /* Export Buttons */
-        .export-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            margin-top: 2rem;
-        }
-
-        .btn-export {
-            background: transparent;
-            border: 2px solid var(--border-color);
-            color: #fff;
-            padding: 0.8rem 2rem;
-            border-radius: 8px;
-            font-weight: 600;
-            transition: all 0.3s;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .btn-export:hover {
-            border-color: var(--accent-color);
-            color: var(--accent-color);
-            transform: translateY(-2px);
-        }
-
-        .btn-export.csv:hover {
-            border-color: var(--success-color);
-            color: var(--success-color);
-        }
-
-        .btn-export.pdf:hover {
-            border-color: var(--danger-color);
-            color: var(--danger-color);
-        }
-
-        /* Info text */
-        .info-text {
-            color: #8892b0;
-            text-align: center;
-            margin-top: 1rem;
-            font-size: 0.9rem;
-        }
-
-        .info-text i {
-            color: var(--accent-color);
-            margin-right: 0.5rem;
-        }
-
-        /* Empty state */
-        .empty-state {
-            padding: 3rem;
-            text-align: center;
-        }
-
-        .empty-state i {
-            font-size: 4rem;
-            color: var(--border-color);
-            margin-bottom: 1rem;
-        }
-
-        .empty-state p {
-            color: #8892b0;
-            font-size: 1.1rem;
-        }
-
-        /* Responsive */
-        @media (max-width: 992px) {
-            .sidebar-col {
-                width: 100%;
-                position: relative;
-                height: auto;
-            }
-            
-            .content-col {
-                margin-left: 0;
-            }
-            
-            .export-buttons {
-                flex-direction: column;
-            }
-            
-            .btn-export {
-                width: 100%;
-            }
-        }
-    </style>
-</head>
 <body>
-    <div class="main-wrapper">
-        <!-- Sidebar -->
-        <div class="sidebar-col">
+    <div class="container-fluid p-0">
+        <div class="row g-0">
             <?php 
             // Set username for sidebar
-            $userName = $username;
+            $userName = $username; // Use actual username
             include_once '../sidebar.php';
             ?>
-        </div>
-        
-        <!-- Main Content -->
-        <div class="content-col">
-            <div class="transactions-container">
+            
+            <!-- Main Content -->
+            <div class="col-lg-10 col-md-9 main-content transactions-content">
                 
                 <!-- Page Title -->
                 <div class="page-title">
@@ -864,7 +487,6 @@ $categories = $categories_result->fetch_all(MYSQLI_ASSOC);
         */
     </script>
     
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <?php include_once "footer.php"; ?>
 </body>
 </html>
