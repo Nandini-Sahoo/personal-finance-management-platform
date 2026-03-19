@@ -2,11 +2,12 @@
 session_start();
 include_once "navbar.php";
 //include_once "check.php";
-require_once "../../../config/dbcon.php";
+require_once "../../../backend/config/dbcon.php";
 
-$id = $_SESSION['user_id'];
-
-$qry = "SELECT * FROM users WHERE id=?";
+// $id = $_SESSION['user_id'];
+$id = 1;
+$conn=getConnection();
+$qry = "SELECT * FROM users WHERE user_id=?";
 $stmt = $conn->prepare($qry);
 $stmt->bind_param("i",$id);
 $stmt->execute();

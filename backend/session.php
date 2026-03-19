@@ -16,7 +16,7 @@ class Session {
     
     public static function requireLogin() {
         if (!self::isLoggedIn()) {
-            header("Location: ../login.php?redirect=" . urlencode($_SERVER['REQUEST_URI']));
+            header("Location: ../frontend/pages/user/login.php?redirect=" . urlencode($_SERVER['REQUEST_URI']));
             exit();
         }
     }

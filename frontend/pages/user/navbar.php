@@ -1,8 +1,9 @@
 <?php
-if(session_status() === PHP_SESSION_NONE){
-    session_start();
-}
+
 include_once "../add-asset.html";
+require_once '../../../backend/session.php';
+Session::startSession();
+
 ?>
 
 <style>
@@ -94,7 +95,7 @@ border:none;
 
 <li class="nav-item">
 <a class="nav-link" href="register.php">
-Register
+<i class="bi bi-r-circle"></i> Register
 </a>
 </li>
 

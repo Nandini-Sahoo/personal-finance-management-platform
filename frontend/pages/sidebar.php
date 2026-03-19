@@ -8,7 +8,8 @@ function isActive($page_name) {
     global $current_page;
     return $current_page == $page_name ? 'active' : '';
 }
-$userName=" "
+
+$userName = Session::getUserName();
 ?>
 
 <style>
@@ -126,11 +127,11 @@ $userName=" "
         <a class="nav-link <?php echo isActive('set-budget.php') || isActive('view-budget.php') || isActive('budget-process.php') ? 'active' : ''; ?>" href="../budget/set-budget.php">
             <i class="fas fa-tasks"></i> Budget
         </a>
-        <a class="nav-link <?php echo isActive('profile.php'); ?>" href="../profile.php">
+        <a class="nav-link <?php echo isActive('profile.php'); ?>" href="../dashboard/profile.php">
             <i class="fas fa-user"></i> Profile
         </a>
         <hr class="text-white-50 my-3">
-        <a class="nav-link logout <?php echo isActive('logout.php'); ?>" href="../logout.php">
+        <a class="nav-link logout <?php echo isActive('logout.php'); ?>" href="../user/logout.php">
             <i class="fas fa-sign-out-alt"></i> Logout
         </a>
     </nav>

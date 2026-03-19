@@ -1,50 +1,55 @@
 <?php
-session_start();
+
 require_once "../../../backend/config/dbcon.php";
-$msg="";
-$conn=getConnection();
-if($_SERVER["REQUEST_METHOD"]=="POST"){
 
-$name=$_POST["name"];
-$email=$_POST["email"];
-$password=$_POST["password"];
-$confirm_password=$_POST["confirm_password"];
+$msg = "";
+$conn = getConnection();
 
-if($password!=$confirm_password){
-$msg="Passwords do not match";
-}else{
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-$check="SELECT * FROM users WHERE email=?";
-$stmt=$conn->prepare($check);
-$stmt->bind_param("s",$email);
-$stmt->execute();
-$result=$stmt->get_result();
+    // Sanitize inputs
+    $name = trim($_POST["name"]);
+    $email = trim($_POST["email"]);
+    $phone = trim($_POST["phone"]);
+    $password = $_POST["password"];
+    $confirm_password = $_POST["confirm_password"];
 
-if($result->num_rows>0){
+    // Check password match
+    if ($password !== $confirm_password) {
+        $msg = "Passwords do not match";
+    } else {
 
-$msg="Email already registered";
+        // Check if email exists
+        $check = "SELECT id FROM users WHERE email=?";
+        $stmt = $conn->prepare($check);
+        $stmt->bind_param("s", $email);
+        $stmt->execute();
+        $result = $stmt->get_result();
 
-}else{
+        if ($result->num_rows > 0) {
+            $msg = "Email already registered";
+        } else {
 
-$hashed=password_hash($password,PASSWORD_DEFAULT);
+            // Hash password
+            $hashed = password_hash($password, PASSWORD_DEFAULT);
 
-$qry="INSERT INTO users(name,email,password_hash) VALUES(?,?,?)";
-$stmt=$conn->prepare($qry);
-$stmt->bind_param("sss",$name,$email,$hashed);
+            // Insert user
+            $qry = "INSERT INTO users(name,email,phone_no,password_hash) VALUES(?,?,?,?)";
+            $stmt = $conn->prepare($qry);
+            $stmt->bind_param("ssss", $name, $email, $phone, $hashed);
 
-if($stmt->execute()){
+            if ($stmt->execute()) {
+                echo "<script>alert('Registration Successful');window.location='login.php';</script>";
+                exit(); // IMPORTANT
+            } else {
+                $msg = "Registration Failed";
+            }
+        }
 
-echo "<script>alert('Registration Successful');window.location='login.php';</script>";
-
-}else{
-$msg="Registration Failed";
+        $stmt->close(); // close statement
+    }
 }
 
-}
-
-}
-
-}
 ?>
 
 <!DOCTYPE html>
@@ -241,6 +246,11 @@ text-decoration:none;
 <div class="form-group">
 <label>Email</label>
 <input type="email" name="email" placeholder="Enter your email" required>
+</div>
+
+<div class="form-group">
+<label>Phone</label>
+<input type="tel" name="phone" placeholder="Enter your Phone number" required>
 </div>
 
 <div class="form-group">

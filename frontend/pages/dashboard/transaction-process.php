@@ -1,10 +1,9 @@
 <?php
 
-$conn = new mysqli("localhost", "root", "", "personal_finance_db");
+require_once "../../../backend/config/dbcon.php";
 
-if ($conn->connect_error) {
-    die("Database connection failed");
-}
+$userId=1;
+$conn=getConnection();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
@@ -13,14 +12,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $date = $_POST['date'] ?? '';
     $notes = $_POST['description'] ?? '';
 
+    $stmt= $conn->prepare("SELECT * FROM categories WHERE category_name=?");
+    $stmt->bind_param("s", $category);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $row = $result->fetch_assoc();
+    $catId=$row['category_id'];
+
     if ($category == "" || $amount == "" || $date == "") {
         echo "❌ Fill all fields";
         exit();
     }
 
     $stmt = $conn->prepare("
-        INSERT INTO expenses (category_id, amount, expense_date, notes) 
-        VALUES (?, ?, ?, ?)
+        INSERT INTO expenses (category_id, user_id, amount, expense_date, notes) 
+        VALUES (?, ?, ?, ?, ?)
     ");
 
     if (!$stmt) {
@@ -28,7 +34,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit();
     }
 
-    $stmt->bind_param("siss", $category, $amount, $date, $notes);
+    $stmt->bind_param("iidss", $catId, $userId, $amount, $date, $notes);
 
     if ($stmt->execute()) {
         echo "✅ Expense added successfully!";
