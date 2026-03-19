@@ -3,30 +3,17 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-// Start session if not already started
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-
 // Include required files with correct paths
 require_once "../../../backend/config/dbcon.php";
+require_once '../../../backend/session.php';
 include_once "check.php";
 
-// Get user ID from session or set default for testing
-// $id = $_SESSION['user_id'] ?? 1; // Uncomment when session is working
-$id = 1; // For testing
+Session::requireLogin();
+$userId = Session::getUserId();
+$userName = Session::getUserName();
 
 // Get database connection
 $conn = getConnection();
-
-// Get username from database
-$username_qry = "SELECT name FROM users WHERE user_id = ?";
-$stmt_user = $conn->prepare($username_qry);
-$stmt_user->bind_param("i", $id);
-$stmt_user->execute();
-$user_result = $stmt_user->get_result();
-$userData = $user_result->fetch_assoc();
-$username = $userData['name'] ?? 'User';
 
 // Get current month and year
 $currentMonth = date('Y-m');
@@ -41,7 +28,7 @@ $qry_monthly_income = "SELECT COALESCE(SUM(amount), 0) as total_income
                        WHERE user_id = ? 
                        AND income_date BETWEEN ? AND ?";
 $stmt1 = $conn->prepare($qry_monthly_income);
-$stmt1->bind_param("iss", $id, $currentMonthStart, $currentMonthEnd);
+$stmt1->bind_param("iss", $userId, $currentMonthStart, $currentMonthEnd);
 $stmt1->execute();
 $result1 = $stmt1->get_result();
 $monthly_income = $result1->fetch_assoc()['total_income'];
@@ -52,7 +39,7 @@ $qry_monthly_expense = "SELECT COALESCE(SUM(amount), 0) as total_expense
                         WHERE user_id = ? 
                         AND expense_date BETWEEN ? AND ?";
 $stmt2 = $conn->prepare($qry_monthly_expense);
-$stmt2->bind_param("iss", $id, $currentMonthStart, $currentMonthEnd);
+$stmt2->bind_param("iss", $userId, $currentMonthStart, $currentMonthEnd);
 $stmt2->execute();
 $result2 = $stmt2->get_result();
 $monthly_expense = $result2->fetch_assoc()['total_expense'];
@@ -80,7 +67,7 @@ $qry_expense_distribution = "SELECT c.category_name, c.category_id,
                              GROUP BY c.category_id, c.category_name
                              HAVING total > 0";
 $stmt3 = $conn->prepare($qry_expense_distribution);
-$stmt3->bind_param("iss", $id, $currentMonthStart, $currentMonthEnd);
+$stmt3->bind_param("iss", $userId, $currentMonthStart, $currentMonthEnd);
 $stmt3->execute();
 $expense_distribution = $stmt3->get_result()->fetch_all(MYSQLI_ASSOC);
 
@@ -107,7 +94,7 @@ $qry_monthly_trend = "SELECT
                       ) e ON months.month_date = e.month_end
                       ORDER BY months.month_date";
 $stmt4 = $conn->prepare($qry_monthly_trend);
-$stmt4->bind_param("ii", $id, $id);
+$stmt4->bind_param("ii", $userId, $userId);
 $stmt4->execute();
 $monthly_trend = $stmt4->get_result()->fetch_all(MYSQLI_ASSOC);
 
@@ -124,7 +111,7 @@ $qry_budget_alerts = "SELECT
                       GROUP BY c.category_id, c.category_name, b.target_amount
                       HAVING budget > 0 AND percentage >= 80";
 $stmt5 = $conn->prepare($qry_budget_alerts);
-$stmt5->bind_param("isiss", $id, $currentMonthStart, $id, $currentMonthStart, $currentMonthEnd);
+$stmt5->bind_param("isiss", $userId, $currentMonthStart, $userId, $currentMonthStart, $currentMonthEnd);
 $stmt5->execute();
 $budget_alerts = $stmt5->get_result()->fetch_all(MYSQLI_ASSOC);
 
@@ -145,7 +132,7 @@ $qry_recent = "(SELECT 'expense' as type, expense_date as trans_date, c.category
                 ORDER BY trans_date DESC
                 LIMIT 5";
 $stmt6 = $conn->prepare($qry_recent);
-$stmt6->bind_param("ii", $id, $id);
+$stmt6->bind_param("ii", $userId, $userId);
 $stmt6->execute();
 $recent_transactions = $stmt6->get_result()->fetch_all(MYSQLI_ASSOC);
 
@@ -159,18 +146,14 @@ include_once '../add-asset.html';
 <body>
     <div class="container-fluid p-0">
         <div class="row g-0">
-            <?php 
-            // Set the username for sidebar
-            $userName = " ";
-            include_once '../sidebar.php';
-            ?>
+            <?php include_once '../sidebar.php'; ?>
             
             <!-- Main Content -->
             <div class="col-lg-10 col-md-9 main-content dashboard-content">
                 
                 <!-- Welcome Card -->
                 <div class="welcome-card">
-                    <h2><i class="fas fa-hand-wave me-2"></i> Welcome back, <?php echo htmlspecialchars($username); ?>!</h2>
+                    <h2><i class="fas fa-hand-wave me-2"></i> Welcome back, <?php echo htmlspecialchars($userName); ?>!</h2>
                     <p class="mb-0">Here's your financial summary for <?php echo $currentMonthDisplay; ?></p>
                 </div>
                 

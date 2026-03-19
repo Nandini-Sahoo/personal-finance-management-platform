@@ -1,13 +1,13 @@
 <?php
-// require_once '../includes/session.php';
+require_once '../../../backend/session.php';
 require_once '../../../backend/report-func.php';
 
 // Check if user is logged in
-// Session::requireLogin();
-// $userId = Session::getUserId();
-// $userName = Session::getUserName();
-$userId = 1;
-$userName = "";
+Session::requireLogin();
+$userId = Session::getUserId();
+$userName = Session::getUserName();
+// $userId = 1;
+// $userName = "";
 
 // Initialize report functions
 $reportFunctions = new ReportFunctions();
