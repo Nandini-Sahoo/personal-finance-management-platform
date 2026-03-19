@@ -8,7 +8,8 @@ function isActive($page_name) {
     global $current_page;
     return $current_page == $page_name ? 'active' : '';
 }
-$userName=" "
+
+$userName = Session::getUserName();
 ?>
 
 <style>

@@ -1,8 +1,10 @@
 <?php
 
 require_once "../../../backend/config/dbcon.php";
+require_once '../../../backend/session.php';
 
-$userId=1;
+Session::requireLogin();
+$userId = Session::getUserId();
 $conn=getConnection();
 
 

@@ -12,8 +12,11 @@ Session::requireLogin();
 $userId = Session::getUserId();
 $userName = Session::getUserName();
 
-// Get database connection
-$conn = getConnection();
+
+// Get database connection (if not already connected)
+if (!isset($conn) || $conn->connect_error) {
+    $conn = getConnection();
+}
 
 // Get current month and year
 $currentMonth = date('Y-m');
