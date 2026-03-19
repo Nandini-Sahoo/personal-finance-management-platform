@@ -1,5 +1,4 @@
 <?php
-session_start();
 require_once "../../../backend/config/dbcon.php";
 
 $msg="";
@@ -8,6 +7,7 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
 
 $name=$_POST["name"];
 $email=$_POST["email"];
+$phone=$_POST["phone"];
 $password=$_POST["password"];
 $confirm_password=$_POST["confirm_password"];
 
@@ -30,9 +30,9 @@ $msg="Email already registered";
 
 $hashed=password_hash($password,PASSWORD_DEFAULT);
 
-$qry="INSERT INTO users(name,email,password_hash) VALUES(?,?,?)";
+$qry="INSERT INTO users(name,email,phone_no,password_hash) VALUES(?,?,?,?)";
 $stmt=$conn->prepare($qry);
-$stmt->bind_param("sss",$name,$email,$hashed);
+$stmt->bind_param("ssss",$name,$email,$phone,$hashed);
 
 if($stmt->execute()){
 
@@ -243,6 +243,11 @@ text-decoration:none;
 <div class="form-group">
 <label>Email</label>
 <input type="email" name="email" placeholder="Enter your email" required>
+</div>
+
+<div class="form-group">
+<label>Phone</label>
+<input type="tel" name="phone" placeholder="Enter your Phone number" required>
 </div>
 
 <div class="form-group">

@@ -130,7 +130,7 @@ $userName=" "
             <i class="fas fa-user"></i> Profile
         </a>
         <hr class="text-white-50 my-3">
-        <a class="nav-link logout <?php echo isActive('logout.php'); ?>" href="../logout.php">
+        <a class="nav-link logout <?php echo isActive('logout.php'); ?>" href="../user/logout.php">
             <i class="fas fa-sign-out-alt"></i> Logout
         </a>
     </nav>

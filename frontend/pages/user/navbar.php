@@ -94,7 +94,7 @@ border:none;
 
 <li class="nav-item">
 <a class="nav-link" href="register.php">
-Register
+<i class="bi bi-r-circle"></i> Register
 </a>
 </li>
 
