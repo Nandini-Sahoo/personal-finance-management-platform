@@ -3,12 +3,6 @@ require_once __DIR__ . '/config/dbcon.php';
 
 class BudgetFunctions {
     
-    // private $db;
-    
-    // public function __construct() {
-    //     $this->db = new Database();
-    // }
-    
     /**
      * Get all expense categories
      */
