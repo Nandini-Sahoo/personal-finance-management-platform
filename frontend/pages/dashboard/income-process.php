@@ -20,10 +20,10 @@ $result = $stmt->get_result();
 $row = $result->fetch_assoc();
 $catId=$row['category_id'];
 
-$sql = "INSERT INTO income (user_id, category_id, amount, income_date, source)
-VALUES('$userId', '$catId','$amount','$date','$description')";
+$stmt = $conn->prepare("INSERT INTO income (user_id, category_id, amount, income_date, source) VALUES(?, ?, ?, ?, ?)");
+$stmt->bind_param("iidss", $userId, $catId, $amount, $date, $description);
 
-if($conn->query($sql)){
+if($stmt->execute()){
 echo "✅ Income Added Successfully! You can add another.";
 }else{
 echo "❌ Error adding income.";
