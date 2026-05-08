@@ -156,66 +156,70 @@ class ReportFunctions {
         ];
     }
     
-    /**
-     * Generate insights from comparison data
-     */
-    public function generateInsights($comparison, $month1, $month2) {
-        $db=getConnection();
-        $insights = [];
+    // In report-func.php, replace the generateInsights method with this:
+
+/**
+ * Generate insights from comparison data
+ */
+public function generateInsights($comparison, $month1, $month2, $userId = null) {
+    $db = getConnection(); // Add this line to get database connection
+    
+    $insights = [];
+    
+    // Find categories with significant increase (>20%)
+    $increasedCategories = array_filter($comparison, function($item) {
+        return $item['percentage_change'] > 20;
+    });
+    
+    // Find categories with significant decrease (>20%)
+    $decreasedCategories = array_filter($comparison, function($item) {
+        return $item['percentage_change'] < -20;
+    });
+    
+    // Find top spender
+    $topSpender = !empty($comparison) ? array_key_first($comparison) : null;
+    $topAmount = $topSpender ? $comparison[$topSpender]['month1_amount'] : 0;
+    
+    // Generate insights
+    if (!empty($increasedCategories)) {
+        $topIncrease = array_key_first($increasedCategories);
+        $increasePercent = $increasedCategories[$topIncrease]['percentage_change'];
+        $increaseAmount = $increasedCategories[$topIncrease]['month1_amount'] - 
+                        $increasedCategories[$topIncrease]['month2_amount'];
         
-        // Find categories with significant increase (>20%)
-        $increasedCategories = array_filter($comparison, function($item) {
-            return $item['percentage_change'] > 20;
-        });
+        $insights[] = [
+            'type' => 'warning',
+            'icon' => '📈',
+            'message' => "You spent " . abs($increasePercent) . "% more on {$topIncrease} this month (₹" . 
+                        number_format($increaseAmount, 2) . " increase)"
+        ];
+    }
+    
+    if (!empty($decreasedCategories)) {
+        $topDecrease = array_key_first($decreasedCategories);
+        $decreasePercent = abs($decreasedCategories[$topDecrease]['percentage_change']);
+        $decreaseAmount = $decreasedCategories[$topDecrease]['month2_amount'] - 
+                        $decreasedCategories[$topDecrease]['month1_amount'];
         
-        // Find categories with significant decrease (>20%)
-        $decreasedCategories = array_filter($comparison, function($item) {
-            return $item['percentage_change'] < -20;
-        });
-        
-        // Find top spender
-        $topSpender = !empty($comparison) ? array_key_first($comparison) : null;
-        $topAmount = $topSpender ? $comparison[$topSpender]['month1_amount'] : 0;
-        
-        // Generate insights
-        if (!empty($increasedCategories)) {
-            $topIncrease = array_key_first($increasedCategories);
-            $increasePercent = $increasedCategories[$topIncrease]['percentage_change'];
-            $increaseAmount = $increasedCategories[$topIncrease]['month1_amount'] - 
-                            $increasedCategories[$topIncrease]['month2_amount'];
-            
-            $insights[] = [
-                'type' => 'warning',
-                'icon' => '📈',
-                'message' => "You spent " . abs($increasePercent) . "% more on {$topIncrease} this month (₹" . 
-                            number_format($increaseAmount, 2) . " increase)"
-            ];
-        }
-        
-        if (!empty($decreasedCategories)) {
-            $topDecrease = array_key_first($decreasedCategories);
-            $decreasePercent = abs($decreasedCategories[$topDecrease]['percentage_change']);
-            $decreaseAmount = $decreasedCategories[$topDecrease]['month2_amount'] - 
-                            $decreasedCategories[$topDecrease]['month1_amount'];
-            
-            $insights[] = [
-                'type' => 'success',
-                'icon' => '📉',
-                'message' => "Great job! You saved " . $decreasePercent . "% on {$topDecrease} (₹" . 
-                            number_format($decreaseAmount, 2) . " less than last month)"
-            ];
-        }
-        
-        if ($topSpender) {
-            $insights[] = [
-                'type' => 'info',
-                'icon' => '💰',
-                'message' => "Your highest spending category is {$topSpender} (₹" . 
-                            number_format($topAmount, 2) . ")"
-            ];
-        }
-        
-        // Check if any category has no budget set
+        $insights[] = [
+            'type' => 'success',
+            'icon' => '📉',
+            'message' => "Great job! You saved " . $decreasePercent . "% on {$topDecrease} (₹" . 
+                        number_format($decreaseAmount, 2) . " less than last month)"
+        ];
+    }
+    
+    if ($topSpender && $topAmount > 0) {
+        $insights[] = [
+            'type' => 'info',
+            'icon' => '💰',
+            'message' => "Your highest spending category is {$topSpender} (₹" . 
+                        number_format($topAmount, 2) . ")"
+        ];
+    }
+    
+    // Check if any category has no budget set - only if userId is provided
+    if ($userId) {
         $sql = "SELECT DISTINCT c.category_name 
                 FROM categories c
                 JOIN expenses e ON c.category_id = e.category_id
@@ -244,10 +248,11 @@ class ReportFunctions {
             ];
         }
         $stmt->close();
-        $db->close();
-        
-        return $insights;
     }
+    
+    $db->close();
+    return $insights;
+}
     
     /**
      * Get category color for charts

@@ -39,6 +39,7 @@ $previousMonthSummary = $reportFunctions->getMonthlySummary($userId, $previousMo
 
 // Generate insights
 $insights = $reportFunctions->generateInsights($comparison, $currentMonth, $previousMonth, $userId);
+
 // Get month names for display
 $currentMonthName = $reportFunctions->getMonthName($currentMonth);
 $previousMonthName = $reportFunctions->getMonthName($previousMonth);
