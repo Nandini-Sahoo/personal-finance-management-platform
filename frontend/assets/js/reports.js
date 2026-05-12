@@ -28,116 +28,93 @@ $(document).ready(function() {
 /**
  * Initialize Comparison Bar Chart
  */
+// Update the initComparisonChart function in reports.js
 function initComparisonChart() {
-    const ctx = document.getElementById('comparisonChart').getContext('2d');
+    const canvas = document.getElementById('comparisonChart');
     
-    // Check if we have data
-    if (!reportData.categories || reportData.categories.length === 0) {
-        document.querySelector('.chart-wrapper').innerHTML = `
-            <div style="height: 400px; display: flex; justify-content: center; align-items: center; flex-direction: column;">
-                <i class="fas fa-chart-bar" style="font-size: 64px; color: #dee2e6; margin-bottom: 20px;"></i>
-                <p style="color: #8d99ae; font-size: 16px;">No data available for the selected months</p>
-            </div>
-        `;
+    if (!canvas) {
+        console.error('Chart canvas element not found');
         return;
     }
     
-    // Create gradient backgrounds
-    const gradient1 = ctx.createLinearGradient(0, 0, 0, 400);
-    gradient1.addColorStop(0, '#36A2EB');
-    gradient1.addColorStop(1, '#2980b9');
+    const ctx = canvas.getContext('2d');
     
-    const gradient2 = ctx.createLinearGradient(0, 0, 0, 400);
-    gradient2.addColorStop(0, '#FF6384');
-    gradient2.addColorStop(1, '#e74c3c');
-    
-    new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: reportData.categories,
-            datasets: [
-                {
-                    label: reportData.currentMonth,
-                    data: reportData.currentAmounts,
-                    backgroundColor: gradient1,
-                    borderColor: '#2980b9',
-                    borderWidth: 1,
-                    borderRadius: 6,
-                    barPercentage: 0.7,
-                    categoryPercentage: 0.8
-                },
-                {
-                    label: reportData.previousMonth,
-                    data: reportData.previousAmounts,
-                    backgroundColor: gradient2,
-                    borderColor: '#e74c3c',
-                    borderWidth: 1,
-                    borderRadius: 6,
-                    barPercentage: 0.7,
-                    categoryPercentage: 0.8
-                }
-            ]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                tooltip: {
-                    backgroundColor: 'rgba(0,0,0,0.8)',
-                    titleColor: '#fff',
-                    bodyColor: '#fff',
-                    callbacks: {
-                        label: function(context) {
-                            let label = context.dataset.label || '';
-                            let value = context.raw || 0;
-                            return `${label}: ₹${value.toFixed(2)}`;
+    // Check if we have data
+    if (typeof reportData !== 'undefined' && reportData.categories && reportData.categories.length > 0) {
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: reportData.categories,
+                datasets: [
+                    {
+                        label: reportData.currentMonth,
+                        data: reportData.currentAmounts,
+                        backgroundColor: 'rgba(54, 162, 235, 0.7)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1,
+                        borderRadius: 6,
+                        barPercentage: 0.7,
+                        categoryPercentage: 0.8
+                    },
+                    {
+                        label: reportData.previousMonth,
+                        data: reportData.previousAmounts,
+                        backgroundColor: 'rgba(255, 99, 132, 0.7)',
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 1,
+                        borderRadius: 6,
+                        barPercentage: 0.7,
+                        categoryPercentage: 0.8
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                let value = context.raw || 0;
+                                return `${label}: ₹${value.toFixed(2)}`;
+                            }
+                        }
+                    },
+                    legend: {
+                        position: 'top',
+                        labels: {
+                            usePointStyle: true,
+                            boxWidth: 10
                         }
                     }
                 },
-                legend: {
-                    display: false // Using custom legend
-                }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    grid: {
-                        color: '#f1f3f5',
-                        drawBorder: false
-                    },
-                    ticks: {
-                        callback: function(value) {
-                            return '₹' + value;
-                        },
-                        font: {
-                            size: 12
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return '₹' + value.toLocaleString('en-IN');
+                            }
                         }
                     }
-                },
-                x: {
-                    grid: {
-                        display: false
-                    },
-                    ticks: {
-                        font: {
-                            size: 12,
-                            weight: '500'
-                        },
-                        maxRotation: 45,
-                        minRotation: 45
-                    }
-                }
-            },
-            layout: {
-                padding: {
-                    top: 20,
-                    bottom: 20
                 }
             }
+        });
+    } else {
+        // Show empty state
+        const wrapper = document.querySelector('.chart-wrapper');
+        if (wrapper) {
+            wrapper.innerHTML = `
+                <div style="height: 400px; display: flex; justify-content: center; align-items: center; flex-direction: column;">
+                    <i class="fas fa-chart-bar" style="font-size: 64px; color: #dee2e6; margin-bottom: 20px;"></i>
+                    <p style="color: #8d99ae; font-size: 16px;">No expense data available for the selected months</p>
+                    <p style="color: #8d99ae; font-size: 14px;">Add expenses to see category comparison</p>
+                </div>
+            `;
         }
-    });
+    }
 }
-
 /**
  * Load comparison data via AJAX (without page refresh)
  */

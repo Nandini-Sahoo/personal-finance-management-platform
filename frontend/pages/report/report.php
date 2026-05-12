@@ -38,17 +38,15 @@ $currentMonthSummary = $reportFunctions->getMonthlySummary($userId, $currentMont
 $previousMonthSummary = $reportFunctions->getMonthlySummary($userId, $previousMonth);
 
 // Generate insights
-$insights = $reportFunctions->generateInsights($comparison, $currentMonth, $previousMonth);
+$insights = $reportFunctions->generateInsights($comparison, $currentMonth, $previousMonth, $userId);
 
 // Get month names for display
 $currentMonthName = $reportFunctions->getMonthName($currentMonth);
 $previousMonthName = $reportFunctions->getMonthName($previousMonth);
-
-include_once '../add-asset.html';
-
 ?>
-
-      <!-- Custom CSS -->
+<head>
+    <?php include_once '../add-asset.html'; ?>
+    <!-- Custom CSS -->
     <link rel="stylesheet" href="../../assets/css/reports.css">
 </head>
 <body>
@@ -234,7 +232,7 @@ include_once '../add-asset.html';
                                         ?>
                                         <tr>
                                             <td>
-                                                <span class="category-badge" style="background: <?php echo $data['color']; ?>20; color: <?php echo $data['color']; ?>;">
+                                                <span class="category-badge">                                                    
                                                     <?php echo htmlspecialchars($category); ?>
                                                 </span>
                                             </td>
@@ -320,115 +318,26 @@ include_once '../add-asset.html';
             </div>
         </div>
     </div>
-    
-    <!-- Chart.js Script -->
     <script>
-        $(document).ready(function() {
-            // Prepare chart data
-            const categories = <?php echo json_encode(array_keys(array_filter($comparison, function($item) {
-                return $item['month1_amount'] > 0 || $item['month2_amount'] > 0;
-            }))); ?>;
-            
-            const currentAmounts = <?php echo json_encode(array_values(array_map(function($item) {
-                return $item['month1_amount'];
-            }, array_filter($comparison, function($item) {
-                return $item['month1_amount'] > 0 || $item['month2_amount'] > 0;
-            })))); ?>;
-            
-            const previousAmounts = <?php echo json_encode(array_values(array_map(function($item) {
-                return $item['month2_amount'];
-            }, array_filter($comparison, function($item) {
-                return $item['month1_amount'] > 0 || $item['month2_amount'] > 0;
-            })))); ?>;
-            
-            const colors = <?php echo json_encode(array_values(array_map(function($item) {
-                return $item['color'];
-            }, array_filter($comparison, function($item) {
-                return $item['month1_amount'] > 0 || $item['month2_amount'] > 0;
-            })))); ?>;
-            
-            // Initialize Chart
-            if (categories.length > 0) {
-                const ctx = document.getElementById('comparisonChart').getContext('2d');
-                
-                // In report.php, update the chart colors
-                new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels: categories,
-                        datasets: [
-                            {
-                                label: '<?php echo $currentMonthName; ?>',
-                                data: currentAmounts,
-                                backgroundColor: '#4361ee', // Use hex instead of rgba for consistency
-                                borderColor: '#4361ee',
-                                borderWidth: 1,
-                                borderRadius: 6,
-                                barPercentage: 0.7,
-                                categoryPercentage: 0.8
-                            },
-                            {
-                                label: '<?php echo $previousMonthName; ?>',
-                                data: previousAmounts,
-                                backgroundColor: '#ef476f', // Use hex instead of rgba
-                                borderColor: '#ef476f',
-                                borderWidth: 1,
-                                borderRadius: 6,
-                                barPercentage: 0.7,
-                                categoryPercentage: 0.8
-                            }
-                        ]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            tooltip: {
-                                callbacks: {
-                                    label: function(context) {
-                                        let label = context.dataset.label || '';
-                                        let value = context.raw || 0;
-                                        return `${label}: ₹${value.toFixed(2)}`;
-                                    }
-                                }
-                            },
-                            legend: {
-                                display: false
-                            }
-                        },
-                        scales: {
-                            y: {
-                                beginAtZero: true,
-                                grid: {
-                                    color: '#f1f3f5'
-                                },
-                                ticks: {
-                                    callback: function(value) {
-                                        return '₹' + value;
-                                    }
-                                }
-                            },
-                            x: {
-                                grid: {
-                                    display: false
-                                },
-                                ticks: {
-                                    maxRotation: 45,
-                                    minRotation: 45
-                                }
-                            }
-                        }
-                    }
-                });
-            } else {
-                document.querySelector('.chart-wrapper').innerHTML = `
-                    <div class="h-100 d-flex justify-content-center align-items-center flex-column">
-                        <i class="fas fa-chart-bar fa-4x text-muted mb-3"></i>
-                        <p class="text-muted">No data available for the selected months</p>
-                    </div>
-                `;
-            }
-        });
+    const reportData = {
+        categories: <?php echo json_encode(array_keys(array_filter($comparison, function($item) {
+            return $item['month1_amount'] > 0 || $item['month2_amount'] > 0;
+        }))); ?>,
+        currentAmounts: <?php echo json_encode(array_values(array_map(function($item) {
+            return $item['month1_amount'];
+        }, array_filter($comparison, function($item) {
+            return $item['month1_amount'] > 0 || $item['month2_amount'] > 0;
+        })))); ?>,
+        previousAmounts: <?php echo json_encode(array_values(array_map(function($item) {
+            return $item['month2_amount'];
+        }, array_filter($comparison, function($item) {
+            return $item['month1_amount'] > 0 || $item['month2_amount'] > 0;
+        })))); ?>,
+        currentMonth: '<?php echo $currentMonthName; ?>',
+        previousMonth: '<?php echo $previousMonthName; ?>'
+    };
     </script>
+    <script src="../../assets/js/reports.js"></script>
+    
 </body>
 </html>

@@ -3,12 +3,6 @@ require_once __DIR__ . '/config/dbcon.php';
 
 class BudgetFunctions {
     
-    // private $db;
-    
-    // public function __construct() {
-    //     $this->db = new Database();
-    // }
-    
     /**
      * Get all expense categories
      */
@@ -40,9 +34,9 @@ class BudgetFunctions {
                 FROM budget 
                 WHERE user_id = ?
                 UNION
-                SELECT DISTINCT DATE_FORMAT(expense_date, '%Y-%m') as month_year,
-                       DATE_FORMAT(expense_date, '%M %Y') as month_name
-                FROM expenses 
+                SELECT DISTINCT DATE_FORMAT(income_date, '%Y-%m') as month_year,
+                       DATE_FORMAT(income_date, '%M %Y') as month_name
+                FROM income 
                 WHERE user_id = ?
                 ORDER BY month_year DESC";
         

@@ -1,12 +1,15 @@
 <?php
-// Start session if not already started
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
 
 // Include required files
 include_once "check.php";
 require_once "../../../backend/config/dbcon.php";
+require_once '../../../backend/session.php';
+
+
+// Check if user is logged in
+Session::requireLogin();
+$userId = Session::getUserId();
+$userName = Session::getUserName();
 
 // Get database connection
 $conn = getConnection();

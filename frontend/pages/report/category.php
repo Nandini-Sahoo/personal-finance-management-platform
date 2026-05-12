@@ -110,7 +110,7 @@ include_once '../add-asset.html';
         
         .category-header {
             padding: 1rem;
-            color: white;
+            color: black;
             font-weight: 600;
             display: flex;
             justify-content: space-between;
@@ -310,7 +310,7 @@ include_once '../add-asset.html';
                         <?php foreach ($categoryData as $index => $category): ?>
                             <div class="col-xl-4 col-lg-6">
                                 <div class="category-card">
-                                    <div class="category-header" style="background: <?php echo $category['color']; ?>;">
+                                    <div class="category-header" style="background: <?php echo $category['category_name']; ?>;">
                                         <span><i class="fas fa-tag me-2"></i><?php echo htmlspecialchars($category['category_name']); ?></span>
                                         <span class="badge bg-white text-dark">#<?php echo $index + 1; ?></span>
                                     </div>
