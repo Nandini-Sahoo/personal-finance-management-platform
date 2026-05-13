@@ -127,14 +127,16 @@ button{
 <select name="payment">
 <option value="Cash">Cash</option>
 <option value="UPI">UPI</option>
-<option value="Card">Card</option>
+<option value="Credit Card">Credit Card</option>
+<option value="Debit Card">Debit Card</option>
+<option value="Others">Others</option>
 </select>
 
 <div class="buttons">
 
 <button type="submit" class="add-btn">ADD EXPENSE</button>
 
-<button type="button" class="cancel-btn" onclick="window.location='../dashboard.php'">
+<button type="button" class="cancel-btn" onclick="window.location='./dashboard.php'">
 CANCEL
 </button>
 

@@ -286,8 +286,8 @@ include_once '../add-asset.html';
             
             .chart-wrapper {
                 height: 300px;
-            } */
-        }
+            }
+        } */
     </style>
 </head>
 <body>

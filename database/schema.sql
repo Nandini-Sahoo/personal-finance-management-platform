@@ -27,6 +27,7 @@ CREATE TABLE expenses (
     amount DECIMAL(10,2) NOT NULL CHECK (amount > 0),
     expense_date DATE NOT NULL,
     notes TEXT,
+    payment_method VARCHAR(20) DEFAULT 'Cash',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     
     -- Foreign Key Constraints
@@ -35,7 +36,8 @@ CREATE TABLE expenses (
     
     -- Indexes for better performance
     INDEX idx_user_date (user_id, expense_date),
-    INDEX idx_category (category_id)
+    INDEX idx_category (category_id),
+    INDEX idx_payment_method (payment_method)
 );
 
 CREATE TABLE income (
@@ -45,6 +47,7 @@ CREATE TABLE income (
     amount DECIMAL(10,2) NOT NULL CHECK (amount > 0),
     income_date DATE NOT NULL,
     source VARCHAR(100),
+    payment_method VARCHAR(20) DEFAULT 'Cash',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     
     -- Foreign Key Constraints
@@ -53,7 +56,8 @@ CREATE TABLE income (
     
     -- Indexes for better performance
     INDEX idx_user_date (user_id, income_date),
-    INDEX idx_category (category_id)
+    INDEX idx_category (category_id),
+    INDEX idx_payment_method (payment_method)
 );
 
 CREATE TABLE budget (

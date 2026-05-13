@@ -31,7 +31,7 @@ $monthlySummary = $reportFunctions->getMonthlySummary($userId, $selectedMonth);
  * Get category-wise expense data for a specific month
  */
 function getCategoryWiseData($userId, $monthYear) {
-    $db=getConnection();
+    $db = getConnection();
     
     $sql = "SELECT 
                 c.category_id,
@@ -47,7 +47,7 @@ function getCategoryWiseData($userId, $monthYear) {
             WHERE c.category_type = 'expense'
             GROUP BY c.category_id, c.category_name
             HAVING total_amount > 0
-            ORDER BY total_amount DESC;";
+            ORDER BY total_amount DESC";
     
     $stmt = $db->prepare($sql);
     $stmt->bind_param("is", $userId, $monthYear);
@@ -56,6 +56,24 @@ function getCategoryWiseData($userId, $monthYear) {
     
     $data = [];
     while ($row = $result->fetch_assoc()) {
+        // Add a dynamic color based on category name
+        $colors = [
+            'Food & Dining' => '#FF6384',
+            'Transportation' => '#36A2EB',
+            'Shopping' => '#FFCE56',
+            'Entertainment' => '#4BC0C0',
+            'Bills & Utilities' => '#9966FF',
+            'Healthcare' => '#FF9F40',
+            'Education' => '#8AC926',
+            'Travel' => '#1982C4',
+            'Rent' => '#6A4C93',
+            'Groceries' => '#F94144',
+            'Insurance' => '#F3722C',
+            'Personal Care' => '#F8961E',
+            'Gifts & Donations' => '#F9C74F',
+            'Others' => '#90BE6D'
+        ];
+        $row['color'] = $colors[$row['category_name']] ?? '#4361ee';
         $data[] = $row;
     }
     
@@ -63,7 +81,6 @@ function getCategoryWiseData($userId, $monthYear) {
     $db->close();
     return $data;
 }
-
 include_once '../add-asset.html';
 
 ?>
@@ -238,7 +255,7 @@ include_once '../add-asset.html';
                 
                 <!-- Month Selector -->
                 <div class="month-selector">
-                    <form method="GET" action="category-report.php">
+                    <form method="GET" action="category.php">
                         <div class="row align-items-end">
                             <div class="col-md-6">
                                 <label class="form-label fw-semibold">Select Month:</label>
@@ -310,8 +327,7 @@ include_once '../add-asset.html';
                         <?php foreach ($categoryData as $index => $category): ?>
                             <div class="col-xl-4 col-lg-6">
                                 <div class="category-card">
-                                    <div class="category-header" style="background: <?php echo $category['category_name']; ?>;">
-                                        <span><i class="fas fa-tag me-2"></i><?php echo htmlspecialchars($category['category_name']); ?></span>
+                                    <div class="category-header" style="background: <?php echo $category['color']; ?>20; color: <?php echo $category['color']; ?>;">                                        <span><i class="fas fa-tag me-2"></i><?php echo htmlspecialchars($category['category_name']); ?></span>
                                         <span class="badge bg-white text-dark">#<?php echo $index + 1; ?></span>
                                     </div>
                                     <div class="category-body">

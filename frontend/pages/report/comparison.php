@@ -208,7 +208,7 @@ include_once '../add-asset.html';
                 
                 <!-- Month Selector -->
                 <div class="month-selector">
-                    <form method="GET" action="comparison-report.php">
+                    <form method="GET" action="comparison.php">
                         <div class="row align-items-end">
                             <div class="col-md-4">
                                 <label class="form-label fw-semibold">Month 1:</label>

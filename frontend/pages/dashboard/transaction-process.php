@@ -11,6 +11,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $amount = $_POST['amount'] ?? '';
     $date = $_POST['date'] ?? '';
     $notes = $_POST['description'] ?? '';
+    $payment = $_POST['payment'] ?? '';
 
     $stmt= $conn->prepare("SELECT * FROM categories WHERE category_name=?");
     $stmt->bind_param("s", $category);
@@ -25,8 +26,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     $stmt = $conn->prepare("
-        INSERT INTO expenses (category_id, user_id, amount, expense_date, notes) 
-        VALUES (?, ?, ?, ?, ?)
+        INSERT INTO expenses (category_id, user_id, amount, expense_date, notes, payment_method) 
+        VALUES (?, ?, ?, ?, ?, ?)
     ");
 
     if (!$stmt) {
@@ -34,7 +35,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit();
     }
 
-    $stmt->bind_param("iidss", $catId, $userId, $amount, $date, $notes);
+    $stmt->bind_param("iidsss", $catId, $userId, $amount, $date, $notes, $payment);
 
     if ($stmt->execute()) {
         echo "✅ Expense added successfully!";

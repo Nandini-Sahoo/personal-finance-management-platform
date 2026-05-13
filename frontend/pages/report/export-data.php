@@ -1,6 +1,8 @@
 <?php
 require_once '../../../backend/session.php';
 require_once '../../../backend/report-func.php';
+require_once '../../../backend/config/dbcon.php';
+
 
 // Check if user is logged in
 Session::requireLogin();
@@ -23,7 +25,7 @@ $categories = getExpenseCategories();
  * Get available years for user
  */
 function getAvailableYears($userId) {
-    global $db;
+    $db = getConnection();
     
     $sql = "SELECT DISTINCT YEAR(transaction_date) as year 
             FROM (
@@ -51,7 +53,7 @@ function getAvailableYears($userId) {
  * Get expense categories
  */
 function getExpenseCategories() {
-    global $db;
+    $db = getConnection();
     
     $sql = "SELECT category_id, category_name FROM categories WHERE category_type = 'expense' ORDER BY category_name";
     $result = $db->query($sql);
@@ -63,7 +65,7 @@ function getExpenseCategories() {
     
     return $categories;
 }
-
+$db = getConnection();
 // Handle export request
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $exportType = $_POST['export_type'] ?? 'transactions';
@@ -112,7 +114,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         FROM expenses WHERE user_id = ? AND expense_date BETWEEN ? AND ?
                         UNION ALL
                         SELECT income_id as id, income_date as transaction_date, 'income' as type,
-                               category_id, amount, source as description, 'N/A' as payment_method
+                               category_id, amount, source as description, payment_method
                         FROM income WHERE user_id = ? AND income_date BETWEEN ? AND ?
                     ) t
                     JOIN categories c ON t.category_id = c.category_id
@@ -307,8 +309,6 @@ include_once '../add-asset.html';
                             <select name="export_type" class="form-select" required>
                                 <option value="transactions">All Transactions</option>
                                 <option value="category_summary">Category Summary</option>
-                                <option value="budget_report">Budget Report</option>
-                                <option value="monthly_summary">Monthly Summary</option>
                             </select>
                         </div>
                         

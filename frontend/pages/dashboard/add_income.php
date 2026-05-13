@@ -120,6 +120,15 @@ button{
 <label>Date</label>
 <input type="date" name="date" required>
 
+<label>Payment Method</label>
+<select name="payment">
+<option value="Cash">Cash</option>
+<option value="UPI">UPI</option>
+<option value="Bank Transfer">Bank Transfer</option>
+<option value="Digital Wallets">Digital Wallets</option>
+<option value="Others">Others</option>
+</select>
+
 <label>Description</label>
 <textarea name="description" placeholder="Monthly salary"></textarea>
 
@@ -127,7 +136,7 @@ button{
 
 <button type="submit" class="add-btn">ADD INCOME</button>
 
-<button type="button" class="cancel-btn" onclick="window.location='../dashboard.php'">
+<button type="button" class="cancel-btn" onclick="window.location='./dashboard.php'">
 CANCEL
 </button>
 
