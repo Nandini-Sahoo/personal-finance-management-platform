@@ -257,7 +257,7 @@ include_once '../add-asset.html';
                 <div class="month-selector">
                     <form method="GET" action="category.php">
                         <div class="row align-items-end">
-                            <div class="col-md-6">
+                            <div class="col-md-3">
                                 <label class="form-label fw-semibold">Select Month:</label>
                                 <select name="month" class="form-select">
                                     <?php foreach ($availableMonths as $month): ?>
@@ -276,6 +276,11 @@ include_once '../add-asset.html';
                             <div class="col-md-3 text-end">
                                 <a href="export-data.php?type=category&month=<?php echo $selectedMonth; ?>" class="btn-export w-100">
                                     <i class="fas fa-download"></i> Export CSV
+                                </a>
+                            </div>
+                            <div class="col-md-3 text-end">
+                                <a href="export-data.php?month=<?php echo $selectedMonth; ?>" class="btn-export w-100">
+                                    <i class="fas fa-file-pdf"></i> Export PDF
                                 </a>
                             </div>
                         </div>
