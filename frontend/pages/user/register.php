@@ -20,7 +20,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } else {
 
         // Check if email exists
-        $check = "SELECT id FROM users WHERE email=?";
+        $check = "SELECT user_id FROM users WHERE email=?";
         $stmt = $conn->prepare($check);
         $stmt->bind_param("s", $email);
         $stmt->execute();
