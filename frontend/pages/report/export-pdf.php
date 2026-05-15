@@ -37,10 +37,6 @@ function getCategoryWiseData($userId, $monthYear) {
 }
 include_once '../add-asset.html';
 ?>
-
-<!-- <head>
-    <title>Financial Report - <?php echo $selectedMonth; ?></title>
-    <link rel="stylesheet" href="../../assets/css/bootstrap.min.css"> -->
     <style>
         @media print {
             body { margin: 0; padding: 0; }
@@ -56,10 +52,6 @@ include_once '../add-asset.html';
         .chart-container { width: 100%; height: 300px; margin: 20px 0; }
         .footer { text-align: center; margin-top: 30px; font-size: 12px; color: #666; }
     </style>
-    <!-- <script src="../../assets/chart/chart.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-</head> -->
-<body>
     <div id="report-content">
         <div class="report-header">
             <h1 class="report-title">Financial Report</h1>
@@ -168,5 +160,3 @@ include_once '../add-asset.html';
             html2pdf().set(opt).from(element).save();
         }
     </script>
-</body>
-<!-- </html> -->

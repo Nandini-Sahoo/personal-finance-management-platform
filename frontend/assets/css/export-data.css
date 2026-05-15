@@ -1,0 +1,93 @@
+/* Main Content Styles */
+.main-content {
+    padding: 2rem;
+}
+
+.page-title {
+    margin-bottom: 2rem;
+}
+
+.page-title h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--dark-color);
+}
+
+.page-title h1 i {
+    color: var(--primary-color);
+    margin-right: 10px;
+}
+
+.page-title p {
+    color: #6c757d;
+    margin: 0;
+}
+
+/* Export Card */
+.export-card {
+    background: white;
+    border-radius: 15px;
+    padding: 2rem;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.export-card h5 {
+    color: var(--dark-color);
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #f1f3f5;
+}
+
+.form-label {
+    font-weight: 600;
+    color: var(--dark-color);
+    margin-bottom: 0.5rem;
+}
+
+.btn-export {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: white;
+    border: none;
+    padding: 0.8rem 2rem;
+    border-radius: 10px;
+    font-weight: 600;
+    width: 100%;
+    transition: all 0.3s;
+}
+
+.btn-export:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
+    color: white;
+}
+
+.info-box {
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 1rem;
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    color: #6c757d;
+}
+
+.info-box i {
+    color: var(--primary-color);
+    margin-right: 0.5rem;
+}
+
+@media (max-width: 992px) {
+    .sidebar {
+        min-height: auto;
+        position: relative;
+    }
+
+    .main-content {
+        padding: 1.5rem;
+    }
+
+    .export-card {
+        padding: 1.5rem;
+    }
+}

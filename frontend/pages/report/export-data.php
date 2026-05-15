@@ -81,7 +81,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     // Determine date range based on selection
     if ($dateRange === 'month' && !empty($month)) {
-        // Fix: Properly set start and end date for the selected month only
         $startDate = $month . '-01';
         $endDate = date('Y-m-t', strtotime($startDate));
     } elseif ($dateRange === 'year' && !empty($year)) {
@@ -90,16 +89,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif ($dateRange === 'all') {
         $startDate = '1970-01-01';
         $endDate = date('Y-m-d');
-    } else {
-        // Custom range - use as is, but ensure they are set
-        if (empty($startDate) || empty($endDate)) {
-            $message = "Please select both start and end dates for custom range.";
-            $error = true;
-        }
     }
-
-    // Debug: Uncomment to check dates (remove in production)
-    // error_log("Date Range: $startDate to $endDate");
     
     // For PDF export, redirect to PDF generation page
     if ($format === 'pdf') {
@@ -130,7 +120,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($exportType === 'transactions') {
             fputcsv($output, ['Date', 'Type', 'Category', 'Amount', 'Description', 'Payment Method']);
             
-            // Build query with category filter if selected
+            // Fetch transactions
             $sql = "SELECT 
                         t.transaction_date,
                         t.type,
@@ -140,29 +130,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         t.payment_method
                     FROM (
                         SELECT expense_id as id, expense_date as transaction_date, 'expense' as type, 
-                            category_id, amount, notes as description, payment_method
+                               category_id, amount, notes as description, payment_method
                         FROM expenses WHERE user_id = ? AND expense_date BETWEEN ? AND ?
                         UNION ALL
                         SELECT income_id as id, income_date as transaction_date, 'income' as type,
-                            category_id, amount, source as description, payment_method
+                               category_id, amount, source as description, payment_method
                         FROM income WHERE user_id = ? AND income_date BETWEEN ? AND ?
                     ) t
-                    JOIN categories c ON t.category_id = c.category_id";
-            
-            // Add category filter if specified
-            $params = [$userId, $startDate, $endDate, $userId, $startDate, $endDate];
-            $types = "isssis";
-            
-            if (!empty($categoryId)) {
-                $sql .= " AND c.category_id = ?";
-                $params[] = $categoryId;
-                $types .= "i";
-            }
-            
-            $sql .= " ORDER BY t.transaction_date DESC";
+                    JOIN categories c ON t.category_id = c.category_id
+                    ORDER BY t.transaction_date DESC";
             
             $stmt = $db->prepare($sql);
-            $stmt->bind_param($types, ...$params);
+            $stmt->bind_param("isssis", $userId, $startDate, $endDate, $userId, $startDate, $endDate);
             $stmt->execute();
             $result = $stmt->get_result();
             
@@ -173,7 +152,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $row['category_name'],
                     $row['amount'],
                     $row['description'],
-                    $row['payment_method'] ?? 'N/A'
+                    $row['payment_method']
                 ]);
             }
             
@@ -263,106 +242,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 $db->close();
-include_once '../add-asset.html';
 ?>
-    
-<style>
-    /* Main Content Styles */
-    .main-content {
-        padding: 2rem;
-    }
-    
-    .page-title {
-        margin-bottom: 2rem;
-    }
-    
-    .page-title h1 {
-        font-size: 2rem;
-        font-weight: 700;
-        color: var(--dark-color);
-    }
-    
-    .page-title h1 i {
-        color: var(--primary-color);
-        margin-right: 10px;
-    }
-    
-    .page-title p {
-        color: #6c757d;
-        margin: 0;
-    }
-    
-    /* Export Card */
-    .export-card {
-        background: white;
-        border-radius: 15px;
-        padding: 2rem;
-        box-shadow: 0 5px 20px rgba(0,0,0,0.05);
-        max-width: 600px;
-        margin: 0 auto;
-    }
-    
-    .export-card h5 {
-        color: var(--dark-color);
-        margin-bottom: 1.5rem;
-        padding-bottom: 1rem;
-        border-bottom: 2px solid #f1f3f5;
-    }
-    
-    .form-label {
-        font-weight: 600;
-        color: var(--dark-color);
-        margin-bottom: 0.5rem;
-    }
-    
-    .btn-export {
-        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-        color: white;
-        border: none;
-        padding: 0.8rem 2rem;
-        border-radius: 10px;
-        font-weight: 600;
-        width: 100%;
-        transition: all 0.3s;
-    }
-    
-    .btn-export:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(67,97,238,0.3);
-        color: white;
-    }
-    
-    .info-box {
-        background: #f8f9fa;
-        border-radius: 10px;
-        padding: 1rem;
-        margin-top: 1rem;
-        font-size: 0.9rem;
-        color: #6c757d;
-    }
-    
-    .info-box i {
-        color: var(--primary-color);
-        margin-right: 0.5rem;
-    }
-    
-    @media (max-width: 992px) {
-        .sidebar {
-            min-height: auto;
-            position: relative;
-        }
-        
-        .main-content {
-            padding: 1.5rem;
-        }
-        
-        .export-card {
-            padding: 1.5rem;
-        }
-    }
-</style>
+<head>
+<?php include_once '../add-asset.html'; ?>
+<!-- Custom CSS -->
+<link rel="stylesheet" href="../../assets/css/export-data.css">
 </head>
-<body>
     <div class="container-fluid p-0">
         <div class="row g-0">
             <?php include_once '../sidebar.php'?>
@@ -437,7 +322,6 @@ include_once '../add-asset.html';
                             </div>
                         </div>
                         
-                        <!-- Month Selection -->
                         <!-- Month Selection -->
                         <div id="monthSelection" class="mb-3" style="display: none;">
                             <select name="month" class="form-select">
@@ -533,5 +417,3 @@ include_once '../add-asset.html';
         document.getElementById('dateRange').dispatchEvent(new Event('change'));
         document.querySelector('select[name="export_type"]').dispatchEvent(new Event('change'));
     </script>
-</body>
-</html>
