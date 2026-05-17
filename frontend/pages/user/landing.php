@@ -48,15 +48,35 @@ margin-bottom:35px;
 max-width:520px;
 }
 
-.hero img{
+/* HERO SLIDER */
+
+.hero-slider{
+position:relative;
 width:420px;
+height:300px;
+overflow:hidden;
 border-radius:14px;
 box-shadow:0 20px 40px rgba(0,0,0,0.5);
 transition:transform 0.4s ease;
 }
 
-.hero img:hover{
+.hero-slider:hover{
 transform:translateY(-8px);
+}
+
+.hero-slider .slide{
+position:absolute;
+top:0;
+left:0;
+width:100%;
+height:100%;
+object-fit:cover;
+opacity:0;
+transition:opacity 1s ease-in-out;
+}
+
+.hero-slider .slide.active{
+opacity:1;
 }
 
 /* BUTTONS */
@@ -196,7 +216,6 @@ color:#64748b;
 
 <?php include_once "navbar.php"; ?>
 
-
 <!-- HERO -->
 
 <section class="hero">
@@ -217,10 +236,19 @@ Build smarter financial habits and stay in control of your money.
 
 </div>
 
-<img src="https://images.unsplash.com/photo-1554224155-6726b3ff858f">
+<!-- SLIDER -->
+
+<div class="hero-slider">
+
+<img src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=900&q=80" class="slide active">
+
+<img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=900&q=80" class="slide">
+
+<img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=900&q=80" class="slide">
+
+</div>
 
 </section>
-
 
 <!-- FEATURE GRID -->
 
@@ -243,12 +271,11 @@ Build smarter financial habits and stay in control of your money.
 
 </section>
 
-
 <!-- SECTION -->
 
 <section class="section">
 
-<img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40">
+<img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=900&q=80">
 
 <div class="section-text">
 
@@ -262,7 +289,6 @@ helping you identify areas where you can save more money.
 </div>
 
 </section>
-
 
 <section class="section">
 
@@ -281,10 +307,9 @@ Understand how your earnings grow over time.
 
 </section>
 
-
 <section class="section">
 
-<img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f">
+<img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=900&q=80">
 
 <div class="section-text">
 
@@ -299,7 +324,6 @@ Stay financially disciplined.
 
 </section>
 
-
 <!-- CTA -->
 
 <section class="cta">
@@ -312,12 +336,27 @@ Stay financially disciplined.
 
 </section>
 
+<?php include 'footer.php'; ?>
 
-<footer>
+<!-- SLIDER SCRIPT -->
 
-<p>© 2026 Personal Finance Management Platform</p>
+<script>
 
-</footer>
+const slides = document.querySelectorAll(".slide");
+
+let currentSlide = 0;
+
+setInterval(() => {
+
+slides[currentSlide].classList.remove("active");
+
+currentSlide = (currentSlide + 1) % slides.length;
+
+slides[currentSlide].classList.add("active");
+
+}, 3000);
+
+</script>
 
 </body>
 </html>
