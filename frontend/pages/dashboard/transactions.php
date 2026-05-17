@@ -1,7 +1,6 @@
 <?php
 
 // Include required files
-include_once "check.php";
 require_once "../../../backend/config/dbcon.php";
 require_once '../../../backend/session.php';
 
@@ -490,6 +489,6 @@ include_once '../add-asset.html';
         */
     </script>
     
-    <?php include_once "footer.php"; ?>
+    <?php include_once "../user/footer.php"; ?>
 </body>
 </html>

@@ -1,3 +1,8 @@
+<?php
+// Start session at the very beginning, before ANY output
+require_once '../../../backend/session.php';
+Session::startSession();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>

@@ -338,6 +338,6 @@ $previousMonthName = $reportFunctions->getMonthName($previousMonth);
     };
     </script>
     <script src="../../assets/js/reports.js"></script>
-    
+    <?php include_once "../user/footer.php"; ?>
 </body>
 </html>

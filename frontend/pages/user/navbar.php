@@ -1,10 +1,4 @@
-<?php
-
-include_once "../add-asset.html";
-require_once '../../../backend/session.php';
-Session::startSession();
-
-?>
+<?php include_once "../add-asset.html"; ?>
 
 <style>
 

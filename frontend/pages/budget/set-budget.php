@@ -212,7 +212,7 @@ include_once '../add-asset.html';
             </div>
         </div>
     </div>
-    
+    <?php include_once "../user/footer.php"; ?>
     <!-- Custom JS -->
     <script src="../../assets/js/budget.js"></script>
     
