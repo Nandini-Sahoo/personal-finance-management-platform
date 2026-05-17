@@ -1,9 +1,7 @@
 <?php
-
 // Include required files
 require_once "../../../backend/config/dbcon.php";
 require_once '../../../backend/session.php';
-
 
 // Check if user is logged in
 Session::requireLogin();
@@ -16,18 +14,15 @@ if ($conn->connect_error) {
     die("Database connection failed");
 }
 
-// Get user ID from session or set default for testing
-// $user_id = $_SESSION['user_id'] ?? 1; // Uncomment when session is working
-$user_id = 1; // For testing
-
 // Get username for sidebar
 $username_qry = "SELECT name FROM users WHERE user_id = ?";
 $stmt_user = $conn->prepare($username_qry);
-$stmt_user->bind_param("i", $user_id);
+$stmt_user->bind_param("i", $userId);
 $stmt_user->execute();
 $user_result = $stmt_user->get_result();
 $userData = $user_result->fetch_assoc();
 $username = $userData['name'] ?? 'User';
+$stmt_user->close();
 
 // Pagination settings
 $limit = 10;
@@ -40,19 +35,7 @@ $type = isset($_GET['type']) ? $_GET['type'] : '';
 $category = isset($_GET['category']) ? $_GET['category'] : '';
 $search = isset($_GET['search']) ? $_GET['search'] : '';
 
-// Build the base query
-$count_query = "SELECT COUNT(*) as total FROM (
-    SELECT 'expense' as transaction_type, e.expense_id, e.expense_date, c.category_name, e.notes as description, e.amount
-    FROM expenses e
-    JOIN categories c ON e.category_id = c.category_id
-    WHERE e.user_id = ?
-    UNION ALL
-    SELECT 'income' as transaction_type, i.income_id, i.income_date, c.category_name, i.source as description, i.amount
-    FROM income i
-    JOIN categories c ON i.category_id = c.category_id
-    WHERE i.user_id = ?
-) AS all_transactions WHERE 1=1";
-
+// Base queries without filters
 $data_query = "SELECT * FROM (
     SELECT 
         'expense' as type,
@@ -62,7 +45,7 @@ $data_query = "SELECT * FROM (
         c.category_name,
         e.notes as description,
         e.amount,
-        c.category_id
+        e.payment_method
     FROM expenses e
     JOIN categories c ON e.category_id = c.category_id
     WHERE e.user_id = ?
@@ -77,55 +60,101 @@ $data_query = "SELECT * FROM (
         c.category_name,
         i.source as description,
         i.amount,
-        c.category_id
+        i.payment_method
     FROM income i
     JOIN categories c ON i.category_id = c.category_id
     WHERE i.user_id = ?
 ) AS combined WHERE 1=1";
 
-$params = [$user_id, $user_id];
+$count_query = "SELECT COUNT(*) as total FROM (
+    SELECT 
+        e.expense_id as id,
+        'expense' as type,
+        c.category_name,
+        e.notes as description
+    FROM expenses e
+    JOIN categories c ON e.category_id = c.category_id
+    WHERE e.user_id = ?
+    
+    UNION ALL
+    
+    SELECT 
+        i.income_id as id,
+        'income' as type,
+        c.category_name,
+        i.source as description
+    FROM income i
+    JOIN categories c ON i.category_id = c.category_id
+    WHERE i.user_id = ?
+) AS combined WHERE 1=1";
+
+// Parameters array
+$params = [$userId, $userId];
+$countParams = [$userId, $userId];
 $types = "ii";
+$countTypes = "ii";
 
-// Apply filters
+// Apply month filter
 if (!empty($month)) {
-    $count_query .= " AND DATE_FORMAT(expense_date, '%Y-%m') = ? AND DATE_FORMAT(income_date, '%Y-%m') = ?";
     $data_query .= " AND DATE_FORMAT(full_date, '%Y-%m') = ?";
+    $count_query .= " AND DATE_FORMAT(
+        CASE 
+            WHEN type = 'expense' THEN (
+                SELECT expense_date FROM expenses e2 WHERE e2.expense_id = combined.id
+            )
+            ELSE (
+                SELECT income_date FROM income i2 WHERE i2.income_id = combined.id
+            )
+        END, '%Y-%m') = ?";
     $params[] = $month;
+    $countParams[] = $month;
     $types .= "s";
+    $countTypes .= "s";
 }
 
+// Apply type filter
 if (!empty($type)) {
-    $count_query .= " AND transaction_type = ?";
     $data_query .= " AND type = ?";
+    $count_query .= " AND type = ?";
     $params[] = $type;
+    $countParams[] = $type;
     $types .= "s";
+    $countTypes .= "s";
 }
 
+// Apply category filter
 if (!empty($category)) {
-    $count_query .= " AND category_name = ?";
     $data_query .= " AND category_name = ?";
+    $count_query .= " AND category_name = ?";
     $params[] = $category;
+    $countParams[] = $category;
     $types .= "s";
+    $countTypes .= "s";
 }
 
+// Apply search filter
 if (!empty($search)) {
     $search_term = "%$search%";
-    $count_query .= " AND (description LIKE ? OR category_name LIKE ?)";
     $data_query .= " AND (description LIKE ? OR category_name LIKE ?)";
+    $count_query .= " AND (description LIKE ? OR category_name LIKE ?)";
     $params[] = $search_term;
     $params[] = $search_term;
+    $countParams[] = $search_term;
+    $countParams[] = $search_term;
     $types .= "ss";
+    $countTypes .= "ss";
 }
 
 // Get total count for pagination
 $stmt_count = $conn->prepare($count_query);
-if (!empty($params)) {
-    $stmt_count->bind_param($types, ...$params);
+if (!empty($countParams)) {
+    $stmt_count->bind_param($countTypes, ...$countParams);
 }
 $stmt_count->execute();
 $count_result = $stmt_count->get_result();
-$total_records = $count_result->fetch_assoc()['total'];
-$total_pages = ceil($total_records / $limit);
+$total_records = $count_result->fetch_assoc()['total'] ?? 0;
+$total_pages = $total_records > 0 ? ceil($total_records / $limit) : 1;
+$stmt_count->close();
 
 // Add sorting and pagination to data query
 $data_query .= " ORDER BY full_date DESC, id DESC LIMIT ? OFFSET ?";
@@ -140,6 +169,7 @@ if (!empty($params)) {
 }
 $stmt_data->execute();
 $transactions = $stmt_data->get_result()->fetch_all(MYSQLI_ASSOC);
+$stmt_data->close();
 
 // Get unique months for filter dropdown
 $months_query = "SELECT DISTINCT DATE_FORMAT(expense_date, '%Y-%m') as month_value, 
@@ -151,14 +181,17 @@ $months_query = "SELECT DISTINCT DATE_FORMAT(expense_date, '%Y-%m') as month_val
                  FROM income WHERE user_id = ?
                  ORDER BY month_value DESC";
 $stmt_months = $conn->prepare($months_query);
-$stmt_months->bind_param("ii", $user_id, $user_id);
+$stmt_months->bind_param("ii", $userId, $userId);
 $stmt_months->execute();
 $months = $stmt_months->get_result()->fetch_all(MYSQLI_ASSOC);
+$stmt_months->close();
 
 // Get categories for filter dropdown
 $categories_query = "SELECT DISTINCT category_name FROM categories WHERE category_type IN ('income', 'expense') ORDER BY category_name";
 $categories_result = $conn->query($categories_query);
 $categories = $categories_result->fetch_all(MYSQLI_ASSOC);
+
+$conn->close();
 
 // Include assets
 include_once '../add-asset.html';
@@ -207,17 +240,12 @@ include_once '../add-asset.html';
     
     /* Fix for table text color */
     .table {
-        color: #fff;
+        color: #ffffff;
     }
     
     .table thead th {
         background: #1e3a5f;
         color: var(--accent-color);
-    }
-    
-    /* Fix for action buttons */
-    .btn-edit, .btn-delete {
-        background: transparent;
     }
     
     /* Fix for pagination */
@@ -238,7 +266,7 @@ include_once '../add-asset.html';
         <div class="row g-0">
             <?php 
             // Set username for sidebar
-            $userName = $username; // Use actual username
+            $userName = $username;
             include_once '../sidebar.php';
             ?>
             
@@ -304,19 +332,16 @@ include_once '../add-asset.html';
                                        placeholder="Description..." value="<?php echo htmlspecialchars($search); ?>">
                             </div>
                             
-                            <div class="col-md-2 d-flex align-items-end">
+                            <div class="col-md-2 d-flex align-items-end gap-2">
                                 <button type="submit" class="btn-filter">
                                     <i class="fas fa-filter me-2"></i>Apply
                                 </button>
+                                <?php if (!empty($month) || !empty($type) || !empty($category) || !empty($search)): ?>
+                                    <a href="transactions.php" class="btn-reset">
+                                        <i class="fas fa-times me-2"></i>Clear
+                                    </a>
+                                <?php endif; ?>
                             </div>
-                            
-                            <?php if (!empty($month) || !empty($type) || !empty($category) || !empty($search)): ?>
-                            <div class="col-12 text-end">
-                                <a href="transactions.php" class="btn-reset">
-                                    <i class="fas fa-times me-2"></i>Clear Filters
-                                </a>
-                            </div>
-                            <?php endif; ?>
                         </div>
                     </form>
                 </div>
@@ -342,8 +367,8 @@ include_once '../add-asset.html';
                                     <th>Type</th>
                                     <th>Category</th>
                                     <th>Description</th>
+                                    <th>Payment Method</th>
                                     <th>Amount</th>
-                                    <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -386,18 +411,15 @@ include_once '../add-asset.html';
                                                 <?php echo htmlspecialchars($trans['description'] ?: '-'); ?>
                                             </td>
                                             <td>
+                                                <span class="badge bg-secondary">
+                                                    <?php echo htmlspecialchars($trans['payment_method'] ?? 'N/A'); ?>
+                                                </span>
+                                            </td>
+                                            <td>
                                                 <span class="<?php echo $trans['type'] == 'income' ? 'amount-income' : 'amount-expense'; ?>">
                                                     <?php echo $trans['type'] == 'income' ? '+' : '-'; ?> 
                                                     ₹<?php echo number_format($trans['amount'], 2); ?>
                                                 </span>
-                                            </td>
-                                            <td>
-                                                <button class="btn-edit" onclick="location.href='edit-transaction.php?id=<?php echo $trans['id']; ?>&type=<?php echo $trans['type']; ?>'">
-                                                    <i class="fas fa-edit me-1"></i>Edit
-                                                </button>
-                                                <button class="btn-delete" onclick="confirmDelete(<?php echo $trans['id']; ?>, '<?php echo $trans['type']; ?>')">
-                                                    <i class="fas fa-trash me-1"></i>Delete
-                                                </button>
                                             </td>
                                         </tr>
                                     <?php endforeach; ?>
@@ -454,13 +476,6 @@ include_once '../add-asset.html';
     </div>
     
     <script>
-        // Confirm delete function
-        function confirmDelete(id, type) {
-            if (confirm("Are you sure you want to delete this " + type + " transaction?")) {
-                window.location = "delete-transaction.php?id=" + id + "&type=" + type;
-            }
-        }
-        
         // Export data function
         function exportData(format) {
             // Get current filter parameters
@@ -477,16 +492,6 @@ include_once '../add-asset.html';
                 '&category=' + encodeURIComponent(category) + 
                 '&search=' + encodeURIComponent(search);
         }
-        
-        // Auto-submit form when filter changes (optional)
-        // Uncomment if you want auto-submit on change
-        /*
-        document.querySelectorAll('.filter-select').forEach(select => {
-            select.addEventListener('change', function() {
-                document.getElementById('filterForm').submit();
-            });
-        });
-        */
     </script>
     
     <?php include_once "../user/footer.php"; ?>

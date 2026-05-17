@@ -1,5 +1,21 @@
 <?php
 session_start();
+require_once "../../../backend/config/dbcon.php";
+require_once '../../../backend/session.php';
+
+// Check if user is logged in
+Session::requireLogin();
+$userId = Session::getUserId();
+
+// Fetch income categories from database
+$conn = getConnection();
+$categoryQuery = "SELECT category_id, category_name FROM categories WHERE category_type = 'income' ORDER BY category_name";
+$categoryResult = $conn->query($categoryQuery);
+$categories = [];
+while ($row = $categoryResult->fetch_assoc()) {
+    $categories[] = $row;
+}
+$conn->close();
 ?>
 
 <!DOCTYPE html>
@@ -8,7 +24,6 @@ session_start();
 <title>Add Income</title>
 
 <style>
-
 body{
     font-family: Arial;
     background:#eef4ff;
@@ -16,7 +31,6 @@ body{
 }
 
 /* Form Container */
-
 .container{
     width:420px;
     margin:80px auto;
@@ -32,14 +46,12 @@ h2{
 }
 
 /* Labels */
-
 label{
     font-weight:bold;
     color:#0d47a1;
 }
 
 /* Inputs */
-
 input,select,textarea{
     width:100%;
     padding:10px;
@@ -50,7 +62,6 @@ input,select,textarea{
 }
 
 /* Buttons */
-
 .buttons{
     display:flex;
     justify-content:space-between;
@@ -82,7 +93,6 @@ button{
 }
 
 /* Message */
-
 #message{
     margin-top:15px;
     padding:10px;
@@ -95,6 +105,10 @@ button{
     color:#0d47a1;
 }
 
+.error{
+    background:#fde2e2;
+    color:#c62828;
+}
 </style>
 </head>
 
@@ -105,43 +119,40 @@ button{
 <h2>ADD INCOME</h2>
 
 <form id="incomeForm">
+    <label>Category</label>
+    <select name="category" required>
+        <option value="">-- Select Category --</option>
+        <?php foreach ($categories as $category): ?>
+            <option value="<?php echo htmlspecialchars($category['category_name']); ?>">
+                <?php echo htmlspecialchars($category['category_name']); ?>
+            </option>
+        <?php endforeach; ?>
+    </select>
 
-<label>Category</label>
-<select name="category" required>
-<option value="Salary">Salary</option>
-<option value="Freelance">Freelance</option>
-<option value="Business">Business</option>
-<option value="Investment">Investment</option>
-</select>
+    <label>Amount</label>
+    <input type="number" name="amount" step="0.01" placeholder="₹ Enter amount" required>
 
-<label>Amount</label>
-<input type="number" name="amount" placeholder="₹ Enter amount" required>
+    <label>Date</label>
+    <input type="date" name="date" required>
 
-<label>Date</label>
-<input type="date" name="date" required>
+    <label>Payment Method</label>
+    <select name="payment">
+        <option value="Cash">Cash</option>
+        <option value="UPI">UPI</option>
+        <option value="Bank Transfer">Bank Transfer</option>
+        <option value="Digital Wallets">Digital Wallets</option>
+        <option value="Others">Others</option>
+    </select>
 
-<label>Payment Method</label>
-<select name="payment">
-<option value="Cash">Cash</option>
-<option value="UPI">UPI</option>
-<option value="Bank Transfer">Bank Transfer</option>
-<option value="Digital Wallets">Digital Wallets</option>
-<option value="Others">Others</option>
-</select>
+    <label>Description</label>
+    <textarea name="description" placeholder="Monthly salary"></textarea>
 
-<label>Description</label>
-<textarea name="description" placeholder="Monthly salary"></textarea>
-
-<div class="buttons">
-
-<button type="submit" class="add-btn">ADD INCOME</button>
-
-<button type="button" class="cancel-btn" onclick="window.location='./dashboard.php'">
-CANCEL
-</button>
-
-</div>
-
+    <div class="buttons">
+        <button type="submit" class="add-btn">ADD INCOME</button>
+        <button type="button" class="cancel-btn" onclick="window.location='./dashboard.php'">
+            CANCEL
+        </button>
+    </div>
 </form>
 
 <div id="message"></div>
@@ -149,34 +160,42 @@ CANCEL
 </div>
 
 <script>
-
 /* AJAX Submit */
-
-document.getElementById("incomeForm").addEventListener("submit",function(e){
-
-e.preventDefault();
-
-let formData = new FormData(this);
-
-fetch("income-process.php",{
-method:"POST",
-body:formData
-})
-.then(res => res.text())
-.then(data => {
-
-let msg=document.getElementById("message");
-
-msg.style.display="block";
-msg.className="success";
-msg.innerHTML=data;
-
-document.getElementById("incomeForm").reset();
-
+document.getElementById("incomeForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+    
+    let formData = new FormData(this);
+    
+    fetch("income-process.php", {
+        method: "POST",
+        body: formData
+    })
+    .then(res => res.text())
+    .then(data => {
+        let msg = document.getElementById("message");
+        msg.style.display = "block";
+        
+        if (data.includes("✅") || data.includes("successfully")) {
+            msg.className = "success";
+            document.getElementById("incomeForm").reset();
+        } else {
+            msg.className = "error";
+        }
+        
+        msg.innerHTML = data;
+        
+        // Auto-hide message after 5 seconds
+        setTimeout(() => {
+            msg.style.display = "none";
+        }, 5000);
+    })
+    .catch(error => {
+        let msg = document.getElementById("message");
+        msg.style.display = "block";
+        msg.className = "error";
+        msg.innerHTML = "❌ Error submitting form. Please try again.";
+    });
 });
-
-});
-
 </script>
 
 </body>

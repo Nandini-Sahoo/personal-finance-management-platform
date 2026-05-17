@@ -11,7 +11,6 @@ Session::requireLogin();
 $userId = Session::getUserId();
 $userName = Session::getUserName();
 
-
 // Get database connection (if not already connected)
 if (!isset($conn) || $conn->connect_error) {
     $conn = getConnection();
@@ -50,17 +49,27 @@ $monthly_expense = $result2->fetch_assoc()['total_expense'];
 $monthly_savings = $monthly_income - $monthly_expense;
 $savings_rate = ($monthly_income > 0) ? round(($monthly_savings / $monthly_income) * 100, 1) : 0;
 
+// Define category colors
+$categoryColors = [
+    'Food & Dining' => '#FF6384',
+    'Transportation' => '#36A2EB',
+    'Shopping' => '#FFCE56',
+    'Entertainment' => '#4BC0C0',
+    'Bills & Utilities' => '#9966FF',
+    'Healthcare' => '#FF9F40',
+    'Education' => '#8AC926',
+    'Travel' => '#1982C4',
+    'Rent' => '#6A4C93',
+    'Groceries' => '#F94144',
+    'Insurance' => '#F3722C',
+    'Personal Care' => '#F8961E',
+    'Gifts & Donations' => '#F9C74F',
+    'Others' => '#90BE6D'
+];
+
 /* Get Expense Distribution for Pie Chart */
 $qry_expense_distribution = "SELECT c.category_name, c.category_id, 
-                                    COALESCE(SUM(e.amount), 0) as total,
-                                    CASE c.category_id 
-                                        WHEN 1 THEN '#4361ee'
-                                        WHEN 2 THEN '#7209b7'
-                                        WHEN 3 THEN '#ef476f'
-                                        WHEN 4 THEN '#ffb703'
-                                        WHEN 5 THEN '#06d6a0'
-                                        ELSE '#6c757d'
-                                    END as color
+                                    COALESCE(SUM(e.amount), 0) as total
                              FROM categories c
                              LEFT JOIN expenses e ON c.category_id = e.category_id 
                                  AND e.user_id = ? 
@@ -68,10 +77,17 @@ $qry_expense_distribution = "SELECT c.category_name, c.category_id,
                              WHERE c.category_type = 'expense'
                              GROUP BY c.category_id, c.category_name
                              HAVING total > 0";
+
 $stmt3 = $conn->prepare($qry_expense_distribution);
 $stmt3->bind_param("iss", $userId, $currentMonthStart, $currentMonthEnd);
 $stmt3->execute();
 $expense_distribution = $stmt3->get_result()->fetch_all(MYSQLI_ASSOC);
+
+// Add colors to each category
+foreach ($expense_distribution as &$category) {
+    $category['color'] = $categoryColors[$category['category_name']] ?? 
+                         '#' . substr(md5($category['category_name']), 0, 6);
+}
 
 /* Get Income vs Expense for Bar Chart (Last 6 months) */
 $qry_monthly_trend = "SELECT 
@@ -367,7 +383,8 @@ include_once '../add-asset.html';
                             position: 'bottom',
                             labels: {
                                 boxWidth: 12,
-                                padding: 15
+                                padding: 15,
+                                color: '#000'
                             }
                         },
                         tooltip: {

@@ -13,7 +13,7 @@ function secureLink($url, $text, $isLoggedIn) {
 }
 ?>
 
-<footer class="footer-section bg-dark text-light pt-5 pb-4">
+<footer class="footer-section text-light pt-5 pb-4">
     <div class="container">
         <div class="row">
 
@@ -72,7 +72,7 @@ function secureLink($url, $text, $isLoggedIn) {
 
         <div class="text-center pt-2">
             <p class="mb-0 text-secondary">
-                © 2026 Personal Finance Management Platform
+                &copy; 2026 Personal Finance Management Platform. All rights reserved.
             </p>
         </div>
     </div>
@@ -80,7 +80,7 @@ function secureLink($url, $text, $isLoggedIn) {
 
 <style>
 .footer-section {
-    background: #020b2d;
+    background: #020617;
     border-top: 3px solid rgba(255,255,255,0.05);
 }
 

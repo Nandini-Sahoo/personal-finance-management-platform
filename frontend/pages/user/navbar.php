@@ -5,7 +5,7 @@
 /* NAVBAR STYLE */
 
 .navbar-custom{
-background:#020617;
+background: #020617;
 padding:16px 0;
 box-shadow:0 4px 15px rgba(0,0,0,0.4);
 }
