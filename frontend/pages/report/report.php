@@ -47,7 +47,7 @@ $previousMonthName = $reportFunctions->getMonthName($previousMonth);
 <head>
     <?php include_once '../add-asset.html'; ?>
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="../../assets/css/reports.css">
+    <link rel="stylesheet" href="../../assets/css/report/report.css">
 </head>
 <body>
     <div class="container-fluid p-0">

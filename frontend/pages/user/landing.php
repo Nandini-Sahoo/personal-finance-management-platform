@@ -8,213 +8,7 @@ Session::startSession();
 <head>
 <meta charset="UTF-8">
 <title>Personal Finance Management Platform</title>
-
-<style>
-
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:"Poppins",Segoe UI,Arial;
-}
-
-body{
-background:#0f172a;
-color:#e2e8f0;
-line-height:1.7;
-overflow-x:hidden;
-}
-
-/* HERO */
-
-.hero{
-display:flex;
-align-items:center;
-justify-content:space-between;
-padding:120px 100px;
-background:linear-gradient(135deg,#0f172a,#1e293b,#1e3a5f);
-}
-
-.hero-text{
-width:50%;
-}
-
-.hero-text h1{
-font-size:54px;
-font-weight:700;
-margin-bottom:20px;
-color:white;
-}
-
-.hero-text p{
-font-size:18px;
-color:#94a3b8;
-margin-bottom:35px;
-max-width:520px;
-}
-
-/* HERO SLIDER */
-
-.hero-slider{
-position:relative;
-width:420px;
-height:300px;
-overflow:hidden;
-border-radius:14px;
-box-shadow:0 20px 40px rgba(0,0,0,0.5);
-transition:transform 0.4s ease;
-}
-
-.hero-slider:hover{
-transform:translateY(-8px);
-}
-
-.hero-slider .slide{
-position:absolute;
-top:0;
-left:0;
-width:100%;
-height:100%;
-object-fit:cover;
-opacity:0;
-transition:opacity 1s ease-in-out;
-}
-
-.hero-slider .slide.active{
-opacity:1;
-}
-
-/* BUTTONS */
-
-.hero-buttons a{
-padding:14px 28px;
-margin-right:12px;
-border-radius:8px;
-text-decoration:none;
-font-weight:600;
-transition:0.3s;
-}
-
-/* KEEP COLORS */
-
-.start{
-background:#22c55e;
-color:white;
-}
-
-.login{
-background:#3b82f6;
-color:white;
-}
-
-/* FEATURE GRID */
-
-.features{
-display:grid;
-grid-template-columns:repeat(3,1fr);
-gap:30px;
-padding:90px 100px;
-background:#1e293b;
-}
-
-.feature-card{
-background:#243b53;
-padding:35px;
-border-radius:14px;
-transition:0.3s;
-box-shadow:0 10px 25px rgba(0,0,0,0.35);
-}
-
-.feature-card:hover{
-transform:translateY(-6px);
-background:#2f4b6b;
-}
-
-.feature-card h3{
-margin-bottom:12px;
-color:white;
-}
-
-.feature-card p{
-color:#94a3b8;
-font-size:15px;
-}
-
-/* SECTIONS */
-
-.section{
-display:flex;
-align-items:center;
-justify-content:space-between;
-padding:110px 100px;
-background:#0f172a;
-}
-
-.section:nth-child(even){
-background:#1e293b;
-}
-
-.section-text{
-width:50%;
-}
-
-.section-text h2{
-font-size:38px;
-margin-bottom:20px;
-color:white;
-}
-
-.section-text p{
-color:#94a3b8;
-font-size:17px;
-max-width:520px;
-}
-
-.section img{
-width:420px;
-border-radius:14px;
-box-shadow:0 15px 35px rgba(0,0,0,0.4);
-}
-
-/* CTA */
-
-.cta{
-text-align:center;
-padding:120px 20px;
-background:linear-gradient(135deg,#1e293b,#334e68);
-}
-
-.cta h2{
-font-size:40px;
-margin-bottom:18px;
-color:white;
-}
-
-.cta p{
-color:#94a3b8;
-margin-bottom:35px;
-}
-
-.cta a{
-background:#22c55e;
-padding:16px 36px;
-border-radius:10px;
-text-decoration:none;
-color:white;
-font-weight:600;
-}
-
-/* FOOTER */
-
-footer{
-text-align:center;
-padding:35px;
-background:#020617;
-color:#64748b;
-}
-
-</style>
-
+<link rel="stylesheet" href="../../assets/css/user/landing.css">
 </head>
 
 <body>
@@ -245,11 +39,11 @@ Build smarter financial habits and stay in control of your money.
 
 <div class="hero-slider">
 
-<img src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=900&q=80" class="slide active">
+<img src="../../assets/image/home-img1.avif" class="slide active" alt="home page img 1">
 
-<img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=900&q=80" class="slide">
+<img src="../../assets/image/home-img2.avif" class="slide" alt="home page img 1">
 
-<img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=900&q=80" class="slide">
+<img src="../../assets/image/home-img3.avif" class="slide" alt="home page img 1">
 
 </div>
 
@@ -280,7 +74,7 @@ Build smarter financial habits and stay in control of your money.
 
 <section class="section">
 
-<img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=900&q=80">
+<img src="../../assets//image/home-img2.avif"  alt="home page img">
 
 <div class="section-text">
 
@@ -308,13 +102,13 @@ Understand how your earnings grow over time.
 
 </div>
 
-<img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=900&q=80">
+<img src="../../assets/image/home-img3.avif"  alt="home page img">
 
 </section>
 
 <section class="section">
 
-<img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=900&q=80">
+<img src="../../assets/image/home-img4.avif"  alt="home page img">
 
 <div class="section-text">
 

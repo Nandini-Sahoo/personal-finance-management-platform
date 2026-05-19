@@ -129,7 +129,7 @@ $avgMonthlySavings = $yearlySavings / 12;
     <head>
     <?php include_once '../add-asset.html'; ?>
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="../../assets/css/spending-trends.css">
+    <link rel="stylesheet" href="../../assets/css/report/spending-trends.css">
 </head>
     <div class="container-fluid p-0">
         <div class="row g-0">

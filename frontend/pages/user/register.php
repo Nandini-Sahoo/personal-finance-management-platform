@@ -63,7 +63,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 body{
 margin:0;
 font-family:"Poppins",Arial;
-background:url("https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=1600&q=80") no-repeat center center/cover;
+background:url("../../assets/image/register-img.avif") no-repeat center center/cover;
 color:white;
 }
 

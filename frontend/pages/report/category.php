@@ -86,7 +86,7 @@ function getCategoryWiseData($userId, $monthYear) {
 <head>
     <?php include_once '../add-asset.html'; ?>
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="../../assets/css/category.css">
+    <link rel="stylesheet" href="../../assets/css/report/category.css">
 </head>
 <body>
     <div class="container-fluid p-0">

@@ -34,7 +34,7 @@ $month2Name = $reportFunctions->getMonthName($month2);
 <head>
     <?php include_once '../add-asset.html'; ?>
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="../../assets/css/comparison.css">
+    <link rel="stylesheet" href="../../assets/css/report/comparison.css">
 </head>
     <div class="container-fluid p-0">
         <div class="row g-0">
