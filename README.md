@@ -1,4 +1,4 @@
-# Personal Finance Management Platform
+# 💰 Personal Finance Management Platform
 
 ## 📋 Table of Contents
 - [Overview](#overview)
@@ -16,11 +16,11 @@
 - [Screenshots](#screenshots)
 - [Future Enhancements](#future-enhancements)
 
-## Overview
+## 📌 Overview
 
 The **Personal Finance Management Platform** is a comprehensive web-based application designed to help individuals track their income, expenses, manage budgets, and generate financial reports. The platform provides an intuitive interface for monitoring personal finances, setting budget goals, and gaining insights into spending patterns.
 
-## Features
+## ✨ Features
 
 ### Core Features
 - **User Authentication**: Secure registration and login system
@@ -38,7 +38,7 @@ The **Personal Finance Management Platform** is a comprehensive web-based applic
 - **Pagination**: Efficient handling of large transaction lists
 - **Responsive Design**: Mobile-friendly interface with burger menu
 
-## Technology Stack
+## 🧰 Technology Stack
 
 ### Frontend
 - **HTML5** - Structure and content
@@ -59,7 +59,7 @@ The **Personal Finance Management Platform** is a comprehensive web-based applic
 - **Bootstrap Icons** - Additional icons
 - **Google Fonts** - Typography
 
-## System Requirements
+## 🛠️ System Requirements
 
 ### Server Requirements
 - PHP 7.4 or higher
@@ -72,7 +72,7 @@ The **Personal Finance Management Platform** is a comprehensive web-based applic
 - JavaScript enabled
 - Internet connection (for CDN resources)
 
-## Installation Guide
+## ⚙️ Installation Guide
 
 ### Step 1: Download and Install XAMPP
 1. Download XAMPP from [https://www.apachefriends.org/](https://www.apachefriends.org/)
@@ -121,7 +121,7 @@ Open browser and navigate to:
 https://localhost/personal-finance-management-platform/frontend/pages/user/landing.php
 ```
 
-## Database Setup
+## 🗄️ Database Setup
 
 ### Database Schema Structure
 
@@ -181,7 +181,7 @@ CREATE TABLE budget (
 );
 ```
 
-## Project Structure
+## 🗃️ Project Structure
 
 ```
 personal-finance-management-platform/
@@ -241,7 +241,7 @@ personal-finance-management-platform/
     └── schema.sql              # Database initialization script
 ```
 
-## Usage Guide
+## 📖 Usage Guide
 
 ### 1. User Registration & Login
 
@@ -335,7 +335,7 @@ personal-finance-management-platform/
 - Color-coded amounts (green for income, red for expense)
 - Pagination for easy navigation
 
-## API Endpoints
+## 🌐 API Endpoints
 
 ### Budget Operations
 
@@ -358,13 +358,13 @@ personal-finance-management-platform/
 | `transaction-process.php` | POST | Add new expense |
 | `income-process.php` | POST | Add new income |
 
-## ER Diagram
+## 🗂️ ER Diagram
 
 ![ER Diagram](https://github.com/user-attachments/assets/711e6a0b-6330-4d2d-8797-adce60e71c4c)
 
 ---
 
-## Troubleshooting
+## 🛠️ Troubleshooting
 
 ### Common Issues and Solutions
 
@@ -434,7 +434,7 @@ if ($conn) {
 }
 ```
 
-## Security Features
+## 🔐 Security Features
 
 ### Implemented Security Measures
 
@@ -472,7 +472,7 @@ $stmt->bind_param("s", $email);
 // Output escaping example
 echo htmlspecialchars($user_input, ENT_QUOTES, 'UTF-8');
 ```
-## Screenshots
+## 🖼️ Screenshots
 
 ![Home Page](https://github.com/user-attachments/assets/9525170e-22a4-4b62-a141-9c5a1ff0f657)
 
@@ -496,7 +496,7 @@ echo htmlspecialchars($user_input, ENT_QUOTES, 'UTF-8');
 
 ---
 
-## Future Enhancements
+## 🔮 Future Enhancements
 
 ### Planned Features
 
@@ -532,18 +532,18 @@ echo htmlspecialchars($user_input, ENT_QUOTES, 'UTF-8');
    - RESTful API for third-party integration
    - Mobile app backend
 
-## Support
+## 💼 Support
 
 For issues, questions, or contributions:
 - **Documentation**: Refer to this README
 - **Issues**: Report bugs through issue tracker
 - **Contributions**: Pull requests welcome
 
-## License
+## 📄 License
 
 This project is for educational purposes as part of academic curriculum.
 
-## Acknowledgments
+## ✅ Acknowledgments
 
 - Bootstrap team for CSS framework
 - Chart.js contributors for visualization library
