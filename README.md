@@ -530,25 +530,27 @@ echo htmlspecialchars($user_input, ENT_QUOTES, 'UTF-8');
 ```
 ## 🖼️ Screenshots
 
-![Home Page](https://github.com/user-attachments/assets/9525170e-22a4-4b62-a141-9c5a1ff0f657)
+![Home Page](https://github.com/user-attachments/assets/858bb704-5c38-42db-9b4f-ae5e199d0fd3)
 
-![Dashboard Page](https://github.com/user-attachments/assets/1bd1ade1-ca5f-4c0a-9622-221883804806)
+![Dashboard Page](https://github.com/user-attachments/assets/f3957b56-37d2-4db1-a352-0068b63279d8)
 
-![Register](https://github.com/user-attachments/assets/93f5b7ad-05eb-4a8b-aa6e-f42d1a0821de)
+![Graphs](https://github.com/user-attachments/assets/8948360e-49dd-4172-866c-1f6c62f2e9aa)
 
-![Login](https://github.com/user-attachments/assets/10a2a66b-68e3-4041-93f0-1fb949336fe5)
+![Register](https://github.com/user-attachments/assets/6e91bfbc-7663-4b07-9ffc-e9184937a939)
 
-![Expense](https://github.com/user-attachments/assets/18e89bba-071b-4ca2-8d4f-03518769ab9d)
+![Login](https://github.com/user-attachments/assets/81cb8e4f-a2a0-43af-8ca0-11d4b39ad296)
 
-![Income](https://github.com/user-attachments/assets/b04c2e19-fe7b-47ce-894d-c54474bedcb9)
+![Expense](https://github.com/user-attachments/assets/df1792ad-f5c4-4e02-b058-23d5bc751f29)
 
-![Transaction](https://github.com/user-attachments/assets/c99042c6-0184-4220-83a7-317ac18bdcb8)
+![Income](https://github.com/user-attachments/assets/1705ad75-23d9-4b1f-b35f-f11184a728c9)
 
-![Budget](https://github.com/user-attachments/assets/07b0de94-b158-411a-be89-050655e74056)
+![Transaction](https://github.com/user-attachments/assets/549c88a9-272a-452c-a970-28fa91ee5ad4)
 
-![Report](https://github.com/user-attachments/assets/1c70de13-a6bf-43d6-a556-0089a4daed4b)
+![Budget](https://github.com/user-attachments/assets/5440c609-711e-4302-b131-dbb5a0f168d3)
 
-![Compare Budget](https://github.com/user-attachments/assets/ea6b1e77-a593-4d69-ae81-25ca2b566d35)
+![Report](https://github.com/user-attachments/assets/c2b65f40-3cd3-4f82-a919-c0ce21bbe656)
+
+![Compare Budget](https://github.com/user-attachments/assets/2899a3b2-aff3-4845-84f1-d70e9f6d474c)
 
 ---
 
